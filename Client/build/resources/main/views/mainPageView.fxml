@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="416.0" prefWidth="896.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController">
+   <children>
+      <Label fx:id="labelUser" layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="115.0" text="User" AnchorPane.bottomAnchor="367.6" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="470.8" AnchorPane.topAnchor="14.0" />
+      <TableView fx:id="tableViewArtist" layoutX="14.0" layoutY="176.0" prefHeight="200.0" prefWidth="412.0">
+        <columns>
+          <TableColumn fx:id="tcArtistNume" prefWidth="75.0" text="Nume" />
+          <TableColumn fx:id="tcArtistDate" prefWidth="75.0" text="Data" />
+          <TableColumn fx:id="tcArtistLocatie" prefWidth="75.0" text="Locatie" />
+          <TableColumn fx:id="tcArtistNrl" prefWidth="75.0" text="Nr. locuri" />
+          <TableColumn fx:id="tcArtistNrlo" prefWidth="109.80001831054688" text="Nr. locuri ocupate" />
+        </columns>
+      </TableView>
+      <Label layoutX="187.0" layoutY="132.0" text="Artisti" />
+      <TableView fx:id="tableViewSArtist" layoutX="452.0" layoutY="176.0" prefHeight="200.0" prefWidth="425.0">
+        <columns>
+            <TableColumn fx:id="tcSArtistNume" prefWidth="75.0" text="Nume" />
+            <TableColumn fx:id="tcSArtistDate" prefWidth="75.0" text="Data" />
+            <TableColumn fx:id="tcSArtistLocatie" prefWidth="75.0" text="Locatie" />
+            <TableColumn fx:id="tcSArtistOra" prefWidth="75.0" text="Ora incepere" />
+            <TableColumn fx:id="tcSArtistNrl" prefWidth="123.99996337890627" text="Nr. locuri disponibile" />
+
+        </columns>
+      </TableView>
+      <Button fx:id="btnSearchByDate" layoutX="640.0" layoutY="119.0" mnemonicParsing="false" onAction="#onBtnSearchByDate" text="Cauta" />
+      <DatePicker fx:id="datePickerArtist" layoutX="577.0" layoutY="67.0" />
+      <Button fx:id="btnSellTicket" layoutX="166.0" layoutY="67.0" mnemonicParsing="false" onAction="#onBtnSellTicket" text="Vinde bilet" />
+   </children>
+</AnchorPane>
