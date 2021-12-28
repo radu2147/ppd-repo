@@ -1,6 +1,7 @@
 package repository;
 
-import domain.Employee;
+import domain.Vanzare;
+import domain.VanzareLocuri;
 import jdbcUtils.JdbcUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,33 +21,35 @@ public class EmployeeRepo implements EmployeeRepoInterface {
         dbUtils=new JdbcUtils(props);
     }
     @Override
-    public Employee getOne(Long id) {
+    public VanzareLocuri getOne(Long id) {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
-        Employee employee=null;
-        try(PreparedStatement preStmt=con.prepareStatement("select * from employee where id=?")){
+        VanzareLocuri vanzareLocuri =null;
+        try(PreparedStatement preStmt=con.prepareStatement("select * from vanzare_locuri where id=?")){
             preStmt.setLong(1,id);
             try(ResultSet result=preStmt.executeQuery()){
                 while(result.next()){
                     Long i=result.getLong("id");
-                    String name=result.getString("name");
-                    employee=new Employee(i,name);
+                    Long vanzareId=result.getLong("vanzare_id");
+                    int nrLocuri = result.getInt("seats");
+                    vanzareLocuri =new VanzareLocuri(i, new Vanzare(vanzareId, null, null), nrLocuri);
                 }
             }
         }catch (SQLException ex){
             logger.error(ex);
             System.err.println("Error DB"+ex);
         }
-        logger.traceExit(employee);
-        return employee;
+        logger.traceExit(vanzareLocuri);
+        return vanzareLocuri;
     }
 
     @Override
-    public Employee add(Employee entity) {
+    public VanzareLocuri add(VanzareLocuri entity) {
         logger.traceEntry("saving task {}",entity);
         Connection con=dbUtils.getConnection();
-        try(PreparedStatement preStmt=con.prepareStatement("insert into employee (name) values(?)")){
-            preStmt.setString(1,entity.getName());
+        try(PreparedStatement preStmt=con.prepareStatement("insert into vanzare_locuri (seats, vanzare_id) values(?, ?)")){
+            preStmt.setInt(1,entity.getLoc());
+            preStmt.setLong(2,entity.getVanzare().getId());
             int result=preStmt.executeUpdate();
             logger.trace("Saved {} instances",result);
         }catch (SQLException ex){

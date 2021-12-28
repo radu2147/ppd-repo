@@ -1,6 +1,6 @@
 package service;
 
-import domain.Employee;
+import domain.VanzareLocuri;
 import repository.EmployeeRepoInterface;
 
 public class EmployeeService {
@@ -10,7 +10,7 @@ public class EmployeeService {
         this.employeeRepo = employeeRepo;
     }
 
-    public Employee getAgent(Long id){
+    public VanzareLocuri getAgent(Long id){
         return employeeRepo.getOne(id);
     }
 }

@@ -1,9 +1,8 @@
 package objectProtocol;
 
 import domain.Account;
-import domain.Employee;
-import domain.FestivalDTO;
-import domain.TicketDTO;
+import domain.SpetacolDTO;
+import domain.VanzareDTO;
 import service.BadCredentialsException;
 import service.IObserver;
 import service.IServices;
@@ -87,7 +86,7 @@ public class ClientObjectWorker implements Runnable, IObserver {
             FestivalRequest festivalReq=(FestivalRequest) request;
             Date date = festivalReq.getDate();
             try {
-                Iterable<FestivalDTO> festivalDTOS=server.searchByDate(date);
+                Iterable<SpetacolDTO> festivalDTOS=server.searchByDate(date);
                 return new FestivalResponse(festivalDTOS);
 
             } catch (ServiceException e) {
@@ -108,12 +107,12 @@ public class ClientObjectWorker implements Runnable, IObserver {
                return new ErrorResponse(e.getMessage());
             }
         }
-        if(request instanceof SellTicketRequest){
-            System.out.println("Sell ticket request");
-            SellTicketRequest sellTicketRequest=(SellTicketRequest) request;
-            TicketDTO ticketDTO= sellTicketRequest.getTicketDTO();
+        if(request instanceof VanzareRequest){
+            System.out.println("Sell Vanzare request");
+            VanzareRequest sellVanzareRequest=(VanzareRequest) request;
+            VanzareDTO VanzareDTO= sellVanzareRequest.getVanzareDTO();
             try {
-                server.sellTicket(ticketDTO.getFestivalID(), ticketDTO.getSeats(),ticketDTO.getClient());
+                server.sellVanzare(VanzareDTO.getFestivalID(), VanzareDTO.getDate());
                 return new OkResponse();
             } catch (ServiceException e) {
                 return new ErrorResponse(e.getMessage());
@@ -130,10 +129,10 @@ public class ClientObjectWorker implements Runnable, IObserver {
     }
 
     @Override
-    public void ticketsSold(TicketDTO ticket) throws ServiceException {
-        System.out.println("Ticket sold "+ticket);
+    public void VanzaresSold(VanzareDTO Vanzare) throws ServiceException {
+        System.out.println("Vanzare sold "+Vanzare);
         try {
-            sendResponse(new TicketSoldResponse(ticket));
+            sendResponse(new VanzareSoldResponse(Vanzare));
         } catch (IOException e) {
             throw new ServiceException("Sending error: "+e);
         }

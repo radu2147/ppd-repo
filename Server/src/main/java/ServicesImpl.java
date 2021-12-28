@@ -1,16 +1,12 @@
 import domain.Account;
-import domain.Festival;
-import domain.FestivalDTO;
-import domain.TicketDTO;
+import domain.SpetacolDTO;
+import domain.VanzareDTO;
 import domain.validators.ValidationException;
-import repository.AccountRepo;
 import service.*;
 
 import java.sql.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 public class ServicesImpl implements IServices {
@@ -42,7 +38,7 @@ public class ServicesImpl implements IServices {
     }
 
     @Override
-    public synchronized Iterable<FestivalDTO> searchByDate(Date date) throws ServiceException {
+    public synchronized Iterable<SpetacolDTO> searchByDate(Date date) throws ServiceException {
         if(date==null)
             return mainPageService.getFestivals();
         else
@@ -50,16 +46,16 @@ public class ServicesImpl implements IServices {
     }
 
     @Override
-    public synchronized void sellTicket(Integer festivalID, Long seats, String client) throws ServiceException {
+    public synchronized void sellVanzare(Integer festivalID, Date date) throws ServiceException {
         try {
-            mainPageService.sellTicket(festivalID.longValue(),seats,client);
-            loggedClients.forEach((x,y)->{
-                try {
-                    y.ticketsSold(new TicketDTO(festivalID,seats,client));
-                } catch (ServiceException e) {
-                    e.printStackTrace();
-                }
-            });
+            mainPageService.sellVanzare(festivalID.longValue(), date);
+//            loggedClients.forEach((x,y)->{
+//                try {
+//                    y.ticketsSold(new VanzareDTO(festivalID,date));
+//                } catch (ServiceException e) {
+//                    e.printStackTrace();
+//                }
+//            });
         } catch (ValidationException e) {
             throw new ServiceException(e.getMessage());
         }

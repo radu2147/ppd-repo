@@ -1,6 +1,6 @@
 package repository;
 
-import domain.Employee;
+import domain.VanzareLocuri;
 
-public interface EmployeeRepoInterface extends RepositoryInterface<Long, Employee> {
+public interface EmployeeRepoInterface extends RepositoryInterface<Long, VanzareLocuri> {
 }

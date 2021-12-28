@@ -1,9 +1,7 @@
 package service;
 
 import domain.Account;
-import domain.Employee;
-import domain.Festival;
-import domain.FestivalDTO;
+import domain.SpetacolDTO;
 
 import java.sql.Date;
 
@@ -20,12 +18,12 @@ public class Services implements IServices {
     }
 
     @Override
-    public Iterable<FestivalDTO> searchByDate(Date date) {
+    public Iterable<SpetacolDTO> searchByDate(Date date) {
         return null;
     }
 
     @Override
-    public void sellTicket(Integer festivalID, Long seats, String client) {
+    public void sellVanzare(Integer festivalID, Date date) {
 
     }
 

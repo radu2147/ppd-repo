@@ -1,11 +1,9 @@
 package domain.validators;
 
-import domain.Artist;
+import domain.Sala;
 
-public class ArtistValidator implements Validator<Artist> {
+public class ArtistValidator implements Validator<Sala> {
     @Override
-    public void validate(Artist entity) throws ValidationException {
-        if(entity.getName().isEmpty() || entity.getGenre().isEmpty())
-            throw new ValidationException("Numele si genreul nu pot fi vide!");
+    public void validate(Sala entity) throws ValidationException {
     }
 }

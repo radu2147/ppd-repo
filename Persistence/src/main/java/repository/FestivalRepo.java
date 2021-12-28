@@ -1,7 +1,7 @@
 package repository;
 
-import domain.Artist;
-import domain.Festival;
+import domain.Sala;
+import domain.Spectacol;
 import jdbcUtils.JdbcUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,16 +14,16 @@ import java.util.Properties;
 public class FestivalRepo implements FestivalRepoInterface {
 
     @Override
-    public Iterable<Festival> findByDate(Date date) {
+    public Iterable<Spectacol> findByDate(Date date) {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
-        List<Festival> festivals=new ArrayList<>();
+        List<Spectacol> spectacols =new ArrayList<>();
         try(PreparedStatement preStmt=con.prepareStatement("select * from festival where date=?")){
             preStmt.setDate(1,date);
             try(ResultSet result=preStmt.executeQuery()){
                 while(result.next()){
-                    Festival festival=getEntityFromResultSet(result);
-                    festivals.add(festival);
+                    Spectacol spectacol =getEntityFromResultSet(result);
+                    spectacols.add(spectacol);
                 }
 
             }
@@ -31,8 +31,8 @@ public class FestivalRepo implements FestivalRepoInterface {
             logger.error(ex);
             System.err.println("Error DB"+ex);
         }
-        logger.traceExit(festivals);
-        return festivals;
+        logger.traceExit(spectacols);
+        return spectacols;
     }
 
     private final JdbcUtils dbUtils;
@@ -43,24 +43,18 @@ public class FestivalRepo implements FestivalRepoInterface {
         dbUtils=new JdbcUtils(props);
     }
 
-    private void setPreparedStatement(Festival entity,PreparedStatement preStmt) throws SQLException {
+    private void setPreparedStatement(Spectacol entity, PreparedStatement preStmt) throws SQLException {
         preStmt.setDate(1,entity.getDate());
-        preStmt.setString(2,entity.getLocation());
-        preStmt.setString(3,entity.getName());
-        preStmt.setString(4,entity.getGenre());
-        preStmt.setLong(5,entity.getSeats());
-        Artist artist=entity.getArtist();
-        if(artist!=null)
-            preStmt.setLong(6,artist.getId());
-        else
-            preStmt.setLong(6,-1);
+        preStmt.setString(2,entity.getName());
+        preStmt.setLong(3,entity.getSold());
+        preStmt.setLong(4,entity.getPriceVanzare());
     }
 
     @Override
-    public Festival add(Festival entity) {
+    public Spectacol add(Spectacol entity) {
         logger.traceEntry("saving task {}",entity);
         Connection con=dbUtils.getConnection();
-        try(PreparedStatement preStmt=con.prepareStatement("insert into festival (date,location,name,genre,seats,artist_id) values(?,?,?,?,?,?)")){
+        try(PreparedStatement preStmt=con.prepareStatement("insert into festival (date,name,sold,priceVanzare) values(?,?,?,?)")){
             setPreparedStatement(entity,preStmt);
             int result=preStmt.executeUpdate();
             logger.trace("Saved {} instances",result);
@@ -73,12 +67,12 @@ public class FestivalRepo implements FestivalRepoInterface {
     }
 
     @Override
-    public Festival update(Festival entity) {
+    public Spectacol update(Spectacol entity) {
         logger.traceEntry("update task {}",entity);
         Connection con=dbUtils.getConnection();
-        try(PreparedStatement preStmt=con.prepareStatement("update festival set date=?,location=?,name=?,genre=?,seats=?,artist_id=? where id=?")){
+        try(PreparedStatement preStmt=con.prepareStatement("update festival set date=?,name=?,sold=?,priceVanzare=? where id=?")){
             setPreparedStatement(entity,preStmt);
-            preStmt.setLong(7,entity.getId());
+            preStmt.setLong(5,entity.getId());
             int result=preStmt.executeUpdate();
             logger.trace("Updated {} instances",result);
         }catch (SQLException ex){
@@ -88,70 +82,46 @@ public class FestivalRepo implements FestivalRepoInterface {
         logger.traceExit();
         return null;
     }
-
-    private Artist getArtist(Long id){
-        logger.traceEntry();
-        Connection con=dbUtils.getConnection();
-        Artist artist=null;
-        try(PreparedStatement preStmt=con.prepareStatement("select * from artist where id=?")){
-            preStmt.setLong(1,id);
-            try(ResultSet result=preStmt.executeQuery()){
-                while(result.next()){
-                    Long i=result.getLong("id");
-                    String name=result.getString("name");
-                    String gen=result.getString("genre");
-                    artist=new Artist(i,name,gen);
-                }
-            }
-        }catch (SQLException ex){
-            logger.error(ex);
-            System.err.println("Error DB"+ex);
-        }
-        logger.traceExit(artist);
-        return artist;
-    }
-    private Festival getEntityFromResultSet(ResultSet result) throws SQLException {
+    private Spectacol getEntityFromResultSet(ResultSet result) throws SQLException {
         Long i=result.getLong("id");
         Date date=result.getDate("date");
-        String location=result.getString("location");
         String name=result.getString("name");
-        String genre=result.getString("genre");
-        Long seats=result.getLong("seats");
-        Long artist_id=result.getLong("artist_id");
+        Long sold=result.getLong("sold");
+        Long priceVanzare = result.getLong("priceVanzare");
 
-        return new Festival(i,date,location,name,genre,seats,getArtist(artist_id));
+        return new Spectacol(i,date,name,sold, priceVanzare, null);
     }
 
     @Override
-    public Festival getOne(Long id) {
+    public Spectacol getOne(Long id) {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
-        Festival festival=null;
+        Spectacol spectacol =null;
         try(PreparedStatement preStmt=con.prepareStatement("select * from festival where id=?")){
             preStmt.setLong(1,id);
             try(ResultSet result=preStmt.executeQuery()){
                 while(result.next()){
-                    festival=getEntityFromResultSet(result);
+                    spectacol =getEntityFromResultSet(result);
                 }
             }
         }catch (SQLException ex){
             logger.error(ex);
             System.err.println("Error DB"+ex);
         }
-        logger.traceExit(festival);
-        return festival;
+        logger.traceExit(spectacol);
+        return spectacol;
     }
 
     @Override
-    public Iterable<Festival> getAll() {
+    public Iterable<Spectacol> getAll() {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
-        List<Festival> festivals=new ArrayList<>();
+        List<Spectacol> spectacols =new ArrayList<>();
         try(PreparedStatement preStmt=con.prepareStatement("select * from festival")){
             try(ResultSet result=preStmt.executeQuery()){
                 while(result.next()){
-                    Festival festival=getEntityFromResultSet(result);
-                    festivals.add(festival);
+                    Spectacol spectacol =getEntityFromResultSet(result);
+                    spectacols.add(spectacol);
                 }
 
             }
@@ -159,15 +129,15 @@ public class FestivalRepo implements FestivalRepoInterface {
             logger.error(ex);
             System.err.println("Error DB"+ex);
         }
-        logger.traceExit(festivals);
-        return festivals;
+        logger.traceExit(spectacols);
+        return spectacols;
     }
 
     @Override
-    public Festival delete(Long id) {
+    public Spectacol delete(Long id) {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
-        List<Festival> festivals=new ArrayList<>();
+        List<Spectacol> spectacols =new ArrayList<>();
         try(PreparedStatement preStmt=con.prepareStatement("delete from festival where id=?")){
             preStmt.setLong(1,id);
             preStmt.executeUpdate();
@@ -175,7 +145,7 @@ public class FestivalRepo implements FestivalRepoInterface {
             logger.error(ex);
             System.err.println("Error DB"+ex);
         }
-        logger.traceExit(festivals);
+        logger.traceExit(spectacols);
         return null;
     }
 }

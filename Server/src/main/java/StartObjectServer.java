@@ -25,13 +25,13 @@ public class StartObjectServer {
         EmployeeRepo userRepo=new EmployeeRepo(serverProps);
         ArtistRepo artistRepo=new ArtistRepo(serverProps);
         FestivalRepo festivalRepo=new FestivalRepo(serverProps);
-        TicketRepo ticketRepo=new TicketRepo(serverProps);
+        VanzareRepo VanzareRepo=new VanzareRepo(serverProps);
 
         EmployeeService userService=new EmployeeService(userRepo);
         ArtistService artistService=new ArtistService(artistRepo);
         FestivalService festivalService=new FestivalService(festivalRepo,artistRepo);
-        TicketService ticketService=new TicketService(ticketRepo,festivalRepo);
-        MainPageService mainPageService=new MainPageService(artistService,festivalService,ticketService,userService);
+        VanzareService VanzareService=new VanzareService(VanzareRepo,festivalRepo);
+        MainPageService mainPageService=new MainPageService(artistService,festivalService,VanzareService,userService);
 
         LoginService loginService=new LoginService(new AccountRepo(serverProps));
         IServices services=new ServicesImpl(loginService, mainPageService);

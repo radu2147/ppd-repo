@@ -1,9 +1,8 @@
 package objectProtocol;
 
 import domain.Account;
-import domain.Festival;
-import domain.FestivalDTO;
-import domain.TicketDTO;
+import domain.SpetacolDTO;
+import domain.VanzareDTO;
 import service.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -55,7 +54,7 @@ public class ServicesObjectProxy implements IServices {
     }
 
     @Override
-    public Iterable<FestivalDTO> searchByDate(Date date) throws ServiceException {
+    public Iterable<SpetacolDTO> searchByDate(Date date) throws ServiceException {
         sendRequest(new FestivalRequest(date));
         Response response=readResponse();
         if (response instanceof ErrorResponse){
@@ -68,14 +67,14 @@ public class ServicesObjectProxy implements IServices {
     }
 
     @Override
-    public void sellTicket(Integer festivalID, Long seats, String client) throws ServiceException {
-        sendRequest(new SellTicketRequest(new TicketDTO(festivalID,seats,client)));
+    public void sellVanzare(Integer festivalID, Date date) throws ServiceException {
+        sendRequest(new VanzareRequest(new VanzareDTO(festivalID,date)));
         Response response=readResponse();
         if (response instanceof ErrorResponse){
             ErrorResponse err=(ErrorResponse)response;
             throw new ServiceException(err.getMessage());
         }
-        System.out.println("Ticket sold - proxy");
+        System.out.println("Vanzare sold - proxy");
     }
 
     public void logout(Account user, IObserver client) throws ServiceException {
@@ -142,12 +141,12 @@ public class ServicesObjectProxy implements IServices {
 
     private void handleUpdate(UpdateResponse update){
 
-        if (update instanceof TicketSoldResponse){
-            TicketSoldResponse ticketSoldResponse=(TicketSoldResponse) update;
-            TicketDTO ticketDTO=ticketSoldResponse.getTicketDTO();
-            System.out.println("Some tickets were sold");
+        if (update instanceof VanzareSoldResponse){
+            VanzareSoldResponse VanzareSoldResponse=(VanzareSoldResponse) update;
+            VanzareDTO VanzareDTO=VanzareSoldResponse.getVanzareDTO();
+            System.out.println("Some Vanzares were sold");
             try{
-                client.ticketsSold(ticketDTO);
+                client.VanzaresSold(VanzareDTO);
             }catch (ServiceException e){
                 e.printStackTrace();
             }

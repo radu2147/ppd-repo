@@ -1,15 +1,15 @@
 package objectProtocol;
 
-import domain.FestivalDTO;
+import domain.SpetacolDTO;
 
 public class FestivalResponse implements Response{
-    private Iterable<FestivalDTO> festivalDTOS;
+    private Iterable<SpetacolDTO> festivalDTOS;
 
-    public FestivalResponse(Iterable<FestivalDTO> festivalDTOS) {
+    public FestivalResponse(Iterable<SpetacolDTO> festivalDTOS) {
         this.festivalDTOS = festivalDTOS;
     }
 
-    public Iterable<FestivalDTO> getFestivalDTOS() {
+    public Iterable<SpetacolDTO> getFestivalDTOS() {
         return festivalDTOS;
     }
 }

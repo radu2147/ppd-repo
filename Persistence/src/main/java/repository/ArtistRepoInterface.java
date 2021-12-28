@@ -1,7 +1,6 @@
 package repository;
 
-import domain.Artist;
+import domain.Sala;
 
-public interface ArtistRepoInterface extends RepositoryInterface<Long, Artist>{
-    Iterable<Artist> findArtistByGenre(String genre);
+public interface ArtistRepoInterface extends RepositoryInterface<Long, Sala>{
 }

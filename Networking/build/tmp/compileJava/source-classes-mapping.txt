@@ -1,17 +1,15 @@
-objectProtocol/SellTicketRequest.java
- objectProtocol.SellTicketRequest
+objectProtocol/VanzareRequest.java
+ objectProtocol.VanzareRequest
 objectProtocol/LogoutRequest.java
  objectProtocol.LogoutRequest
 utils/ServerException.java
  utils.ServerException
-objectProtocol/SellTicketResponse.java
- objectProtocol.SellTicketResponse
-objectProtocol/TicketSoldRequest.java
- objectProtocol.TicketSoldRequest
+objectProtocol/VanzareResponse.java
+ objectProtocol.VanzareResponse
+objectProtocol/VanzareSoldResponse.java
+ objectProtocol.VanzareSoldResponse
 utils/AbsConcurrentServer.java
  utils.AbsConcurrentServer
-objectProtocol/TicketSoldResponse.java
- objectProtocol.TicketSoldResponse
 objectProtocol/FestivalRequest.java
  objectProtocol.FestivalRequest
 objectProtocol/Request.java
@@ -35,6 +33,8 @@ objectProtocol/LoginRequest.java
  objectProtocol.LoginRequest
 objectProtocol/LoginResponse.java
  objectProtocol.LoginResponse
+objectProtocol/VanzareSoldRequest.java
+ objectProtocol.VanzareSoldRequest
 objectProtocol/ClientObjectWorker.java
  objectProtocol.ClientObjectWorker
 objectProtocol/UpdateResponse.java

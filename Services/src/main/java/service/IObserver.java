@@ -1,7 +1,7 @@
 package service;
 
-import domain.TicketDTO;
+import domain.VanzareDTO;
 
 public interface IObserver {
-    void ticketsSold(TicketDTO ticket) throws ServiceException;
+    void VanzaresSold(VanzareDTO Vanzare) throws ServiceException;
 }

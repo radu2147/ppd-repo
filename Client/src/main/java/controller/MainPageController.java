@@ -1,13 +1,9 @@
 package controller;
 
 import domain.Account;
-import domain.Employee;
-import domain.FestivalDTO;
-import domain.TicketDTO;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleLongProperty;
+import domain.SpetacolDTO;
+import domain.VanzareDTO;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +15,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import service.BadCredentialsException;
 import service.IObserver;
 import service.IServices;
 import service.ServiceException;
@@ -29,15 +24,13 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class MainPageController implements IObserver {
-    ObservableList<FestivalDTO> festivalModel = FXCollections.observableArrayList();
-    ObservableList<FestivalDTO> festivalSModel = FXCollections.observableArrayList();
+    ObservableList<SpetacolDTO> festivalModel = FXCollections.observableArrayList();
+    ObservableList<SpetacolDTO> festivalSModel = FXCollections.observableArrayList();
     private Account account;
     private IServices server;
 
@@ -59,31 +52,31 @@ public class MainPageController implements IObserver {
     Label labelUser;
     //toti artistii
     @FXML
-    TableView<FestivalDTO> tableViewArtist;
+    TableView<SpetacolDTO> tableViewArtist;
     @FXML
-    TableColumn<FestivalDTO,String> tcArtistNume;
+    TableColumn<SpetacolDTO,String> tcArtistNume;
     @FXML
-    TableColumn<FestivalDTO, Date> tcArtistDate;
+    TableColumn<SpetacolDTO, Date> tcArtistDate;
     @FXML
-    TableColumn<FestivalDTO, String> tcArtistLocatie;
+    TableColumn<SpetacolDTO, String> tcArtistLocatie;
     @FXML
-    TableColumn<FestivalDTO, Long> tcArtistNrl;
+    TableColumn<SpetacolDTO, Long> tcArtistNrl;
     @FXML
-    TableColumn<FestivalDTO, Long> tcArtistNrlo;
+    TableColumn<SpetacolDTO, Long> tcArtistNrlo;
 
     //filtrare artisti
     @FXML
-    TableView<FestivalDTO> tableViewSArtist;
+    TableView<SpetacolDTO> tableViewSArtist;
     @FXML
-    TableColumn<FestivalDTO,String> tcSArtistNume;
+    TableColumn<SpetacolDTO,String> tcSArtistNume;
     @FXML
-    TableColumn<FestivalDTO, Date> tcSArtistDate;
+    TableColumn<SpetacolDTO, Date> tcSArtistDate;
     @FXML
-    TableColumn<FestivalDTO, String> tcSArtistLocatie;
+    TableColumn<SpetacolDTO, String> tcSArtistLocatie;
     @FXML
-    TableColumn<FestivalDTO, Long> tcSArtistNrl;
+    TableColumn<SpetacolDTO, Long> tcSArtistNrl;
     @FXML
-    TableColumn<FestivalDTO, Time> tcSArtistOra;
+    TableColumn<SpetacolDTO, Time> tcSArtistOra;
     private void init(){
         labelUser.setText(account.getName());
         initModelFestivals();
@@ -98,11 +91,11 @@ public class MainPageController implements IObserver {
         tcArtistLocatie.setCellValueFactory(new PropertyValueFactory<>("location"));
         tcArtistNrl.setCellValueFactory(new PropertyValueFactory<>("seats"));
         tcArtistNrlo.setCellValueFactory(new PropertyValueFactory<>("soldSeats"));
-        tableViewArtist.setRowFactory(tv -> new TableRow<FestivalDTO>() {
+        tableViewArtist.setRowFactory(tv -> new TableRow<SpetacolDTO>() {
             @Override
-            protected void updateItem(FestivalDTO item, boolean empty) {
+            protected void updateItem(SpetacolDTO item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item!=null && item.getSeats()-item.getSoldSeats() == 0)
+                if (item!=null && item.getSold()-item.getPriceVanzare() == 0)
                     setStyle("-fx-background-color: red");
                 else{
                     setStyle("");
@@ -115,8 +108,8 @@ public class MainPageController implements IObserver {
         tcSArtistDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         tcSArtistLocatie.setCellValueFactory(new PropertyValueFactory<>("location"));
         tcSArtistNrl.setCellValueFactory(cell->{
-            Long seats=cell.getValue().getSeats();
-            Long soldSeats=cell.getValue().getSoldSeats();
+            Long seats=cell.getValue().getSold();
+            Long soldSeats=cell.getValue().getPriceVanzare();
 
             return new SimpleObjectProperty(seats-soldSeats);
         });
@@ -129,24 +122,24 @@ public class MainPageController implements IObserver {
         tableViewSArtist.setItems(festivalSModel);
     }
     private void initModelFestivals(){
-        Iterable<FestivalDTO> festivals= null;
+        Iterable<SpetacolDTO> festivals= null;
         try {
             festivals = server.searchByDate(null);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        List<FestivalDTO> festivalList= StreamSupport.stream(festivals.spliterator(),false).collect(Collectors.toList());
+        List<SpetacolDTO> festivalList= StreamSupport.stream(festivals.spliterator(),false).collect(Collectors.toList());
         festivalModel.setAll(festivalList);
     }
 
     private void initModelSFestivals(Date date){
-        Iterable<FestivalDTO> festivals= null;
+        Iterable<SpetacolDTO> festivals= null;
         try {
             festivals = server.searchByDate(date);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        List<FestivalDTO> festivalList= StreamSupport.stream(festivals.spliterator(),false).collect(Collectors.toList());
+        List<SpetacolDTO> festivalList= StreamSupport.stream(festivals.spliterator(),false).collect(Collectors.toList());
         festivalSModel.setAll(festivalList);
     }
 
@@ -159,14 +152,14 @@ public class MainPageController implements IObserver {
 
 
     @FXML
-    public void onBtnSellTicket(){
-        FestivalDTO festival=tableViewArtist.getSelectionModel().getSelectedItem();
+    public void onBtnSellVanzare(){
+        SpetacolDTO festival=tableViewArtist.getSelectionModel().getSelectedItem();
         if(festival==null){
             AlertDisplayer.showErrorMessage(null,"Trebuie sa selectati un festival");
             return;
         }
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/views/sellTicketView.fxml"));
+        loader.setLocation(getClass().getResource("/views/sellVanzareView.fxml"));
 
 
         AnchorPane root = null;
@@ -177,23 +170,22 @@ public class MainPageController implements IObserver {
         }
 
         Stage dialogStage = new Stage();
-        dialogStage.setTitle("Sell ticket");
+        dialogStage.setTitle("Sell Vanzare");
         dialogStage.initModality(Modality.WINDOW_MODAL);
         Scene scene = new Scene(root);
         dialogStage.setScene(scene);
 
-        SellTicketController controller= loader.getController();
+        SellVanzareController controller= loader.getController();
         controller.setServices(account,server,festival);
         dialogStage.show();
     }
 
     @Override
-    public void ticketsSold(TicketDTO ticket) throws ServiceException {
+    public void VanzaresSold(VanzareDTO Vanzare) throws ServiceException {
         //TODO implement
         for(int index=0;index<festivalModel.size();index++){
-            FestivalDTO festivalDTO=festivalModel.get(index);
-            if(festivalDTO.getFestivalID().intValue()==ticket.getFestivalID()){
-                festivalDTO.setSoldSeats(ticket.getSeats().intValue());
+            SpetacolDTO festivalDTO=festivalModel.get(index);
+            if(festivalDTO.getFestivalID().intValue()==Vanzare.getFestivalID()){
                 festivalModel.set(index,festivalDTO);
             }
         }

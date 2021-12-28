@@ -3,21 +3,20 @@ package domain;
 import java.io.Serializable;
 import java.sql.Date;
 
-public class FestivalDTO implements Serializable {
+public class SpetacolDTO implements Serializable {
     private Long festivalID;
     private String name;
     private Date date;
-    private String location;
-    private Long seats;
-    private Long soldSeats;
+    private Long sold;
+    private Long priceVanzare;
 
-    public FestivalDTO(Long festivalID,String name, Date date, String location, Long seats, Long soldSeats) {
+    public SpetacolDTO(Long festivalID, String name, Date date, Long seats, Long soldSeats) {
         this.festivalID=festivalID;
         this.name = name;
         this.date = date;
-        this.location = location;
-        this.seats = seats;
-        this.soldSeats = soldSeats;
+
+        this.sold = seats;
+        this.priceVanzare = soldSeats;
     }
 
     public Long getFestivalID() {
@@ -32,24 +31,22 @@ public class FestivalDTO implements Serializable {
         return date;
     }
 
-    public String getLocation() {
-        return location;
+
+
+    public Long getSold() {
+        return sold;
     }
 
-    public Long getSeats() {
-        return seats;
+    public Long getPriceVanzare() {
+        return priceVanzare;
     }
 
-    public Long getSoldSeats() {
-        return soldSeats;
-    }
-
-    public void setSoldSeats(Integer seats){
-        this.soldSeats+=seats;
+    public void setPriceVanzare(Long seats){
+        this.priceVanzare = seats;
     }
     @Override
     public String toString() {
-        return "Artist: "+name+" date: "+date+" location: "+location+" total seats: "+seats;
+        return "Artist: "+name+" date: "+date+ "total seats: "+ sold;
 //        return "FestivalDTO{" +
 //                "festivalID=" + festivalID +
 //                ", name='" + name + '\'' +

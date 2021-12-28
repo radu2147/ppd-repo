@@ -1,9 +1,9 @@
 package repository;
 
-import domain.Festival;
+import domain.Spectacol;
 
 import java.sql.Date;
 
-public interface FestivalRepoInterface extends RepositoryInterface<Long, Festival> {
-    Iterable<Festival> findByDate(Date date);
+public interface FestivalRepoInterface extends RepositoryInterface<Long, Spectacol> {
+    Iterable<Spectacol> findByDate(Date date);
 }

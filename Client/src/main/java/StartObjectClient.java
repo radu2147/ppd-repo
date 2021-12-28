@@ -78,7 +78,7 @@ public class StartObjectClient extends Application {
         ctrl.setParent(croot);
 
         //initView(primaryStage,server);
-        primaryStage.setTitle("Login Festival Tickets");
+        primaryStage.setTitle("Login Festival Vanzares");
         primaryStage.setScene(new Scene(root));
         primaryStage.setWidth(800);
         primaryStage.show();

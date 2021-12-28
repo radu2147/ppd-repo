@@ -4,8 +4,8 @@ jdbcUtils/JdbcUtils.java
  jdbcUtils.JdbcUtils
 repository/CustomerRepoInterface.java
  repository.CustomerRepoInterface
-repository/TicketRepoInterface.java
- repository.TicketRepoInterface
+repository/VanzareRepoInterface.java
+ repository.VanzareRepoInterface
 repository/ArtistRepoInterface.java
  repository.ArtistRepoInterface
 repository/AccountRepo.java
@@ -14,6 +14,8 @@ repository/AccountRepoInterface.java
  repository.AccountRepoInterface
 repository/FestivalRepoInterface.java
  repository.FestivalRepoInterface
+repository/VanzareRepo.java
+ repository.VanzareRepo
 repository/RepositoryInterface.java
  repository.RepositoryInterface
 repository/Repository.java
@@ -26,5 +28,3 @@ repository/ArtistRepo.java
  repository.ArtistRepo
 repository/CustomerRepo.java
  repository.CustomerRepo
-repository/TicketRepo.java
- repository.TicketRepo

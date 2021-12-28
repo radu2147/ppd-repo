@@ -1,13 +1,13 @@
 package domain.validators;
 
-import domain.Festival;
+import domain.Spectacol;
 
-public class FestivalValidator implements Validator<Festival> {
+public class FestivalValidator implements Validator<Spectacol> {
     @Override
-    public void validate(Festival entity) throws ValidationException {
-        if(entity.getName().isEmpty() || entity.getGenre().isEmpty() || entity.getLocation().isEmpty())
+    public void validate(Spectacol entity) throws ValidationException {
+        if(entity.getName().isEmpty())
             throw new ValidationException("Numele, genreul si locatia nu pot fi vide!");
-        if(entity.getSeats()<=0)
+        if(entity.getSold()<=0)
             throw new ValidationException("Festivalul trebuie sa aiba locuri disponibile!");
     }
 }

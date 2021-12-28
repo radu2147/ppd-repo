@@ -1,6 +1,6 @@
 package repository;
 
-import domain.Artist;
+import domain.Sala;
 import jdbcUtils.JdbcUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,12 +24,11 @@ public class ArtistRepo implements ArtistRepoInterface{
     }
 
     @Override
-    public Artist add(Artist entity) {
+    public Sala add(Sala entity) {
         logger.traceEntry("saving task {}",entity);
         Connection con=dbUtils.getConnection();
-        try(PreparedStatement preStmt=con.prepareStatement("insert into artist (name,genre) values(?,?)")){
-            preStmt.setString(1,entity.getName());
-            preStmt.setString(2,entity.getGenre());
+        try(PreparedStatement preStmt=con.prepareStatement("insert into sala (seats) values(?)")){
+            preStmt.setInt(1,entity.getSeats());
             int result=preStmt.executeUpdate();
             logger.trace("Saved {} instances",result);
         }catch (SQLException ex){
@@ -41,13 +40,12 @@ public class ArtistRepo implements ArtistRepoInterface{
     }
 
     @Override
-    public Artist update(Artist entity) {
+    public Sala update(Sala entity) {
         logger.traceEntry("update task {}",entity);
         Connection con=dbUtils.getConnection();
-        try(PreparedStatement preStmt=con.prepareStatement("update artist set name=?,genre=? where id=?")){
-            preStmt.setString(1,entity.getName());
-            preStmt.setString(2,entity.getGenre());
-            preStmt.setLong(3,entity.getId());
+        try(PreparedStatement preStmt=con.prepareStatement("update sala set seats=? where id=?")){
+            preStmt.setInt(1,entity.getSeats());
+            preStmt.setLong(2,entity.getId());
             int result=preStmt.executeUpdate();
             logger.trace("Updated {} instances",result);
         }catch (SQLException ex){
@@ -59,42 +57,17 @@ public class ArtistRepo implements ArtistRepoInterface{
     }
 
     @Override
-    public Iterable<Artist> findArtistByGenre(String genre) {
+    public Sala getOne(Long id) {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
-        List<Artist> artists=new ArrayList<>();
-        try(PreparedStatement preStmt=con.prepareStatement("select * from artist where genre=?")){
-            preStmt.setString(1,genre);
-            try(ResultSet result=preStmt.executeQuery()){
-                while(result.next()){
-                    Long id=result.getLong("id");
-                    String name=result.getString("name");
-                    String gen=result.getString("genre");
-                    Artist artist=new Artist(id,name,gen);
-                    artists.add(artist);
-                }
-            }
-        }catch (SQLException ex){
-            logger.error(ex);
-            System.err.println("Error DB"+ex);
-        }
-        logger.traceExit(artists);
-        return artists;
-    }
-
-    @Override
-    public Artist getOne(Long id) {
-        logger.traceEntry();
-        Connection con=dbUtils.getConnection();
-        Artist artist=null;
-        try(PreparedStatement preStmt=con.prepareStatement("select * from artist where id=?")){
+        Sala artist=null;
+        try(PreparedStatement preStmt=con.prepareStatement("select * from sala where id=?")){
             preStmt.setLong(1,id);
             try(ResultSet result=preStmt.executeQuery()){
                 while(result.next()){
-                    Long i=result.getLong("id");
-                    String name=result.getString("name");
-                    String gen=result.getString("genre");
-                    artist=new Artist(i,name,gen);
+                    Long i = result.getLong("id");
+                    int seats = result.getInt("seats");
+                    artist = new Sala(i,seats);
                 }
             }
         }catch (SQLException ex){
@@ -106,17 +79,16 @@ public class ArtistRepo implements ArtistRepoInterface{
     }
 
     @Override
-    public Iterable<Artist> getAll() {
+    public Iterable<Sala> getAll() {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
-        List<Artist> artists=new ArrayList<>();
-        try(PreparedStatement preStmt=con.prepareStatement("select * from artist")){
+        List<Sala> artists=new ArrayList<>();
+        try(PreparedStatement preStmt=con.prepareStatement("select * from sala")){
             try(ResultSet result=preStmt.executeQuery()){
                 while(result.next()){
                     Long id=result.getLong("id");
-                    String name=result.getString("name");
-                    String gen=result.getString("genre");
-                    Artist artist=new Artist(id,name,gen);
+                    int seats = result.getInt("seats");
+                    Sala artist=new Sala(id,seats);
                     artists.add(artist);
                 }
             }
@@ -129,11 +101,11 @@ public class ArtistRepo implements ArtistRepoInterface{
     }
 
     @Override
-    public Artist delete(Long id) {
+    public Sala delete(Long id) {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
-        List<Artist> artists=new ArrayList<>();
-        try(PreparedStatement preStmt=con.prepareStatement("delete from artist where id=?")){
+        List<Sala> artists=new ArrayList<>();
+        try(PreparedStatement preStmt=con.prepareStatement("delete from sala where id=?")){
             preStmt.setLong(1,id);
             preStmt.executeUpdate();
         }catch (SQLException ex){
