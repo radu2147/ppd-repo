@@ -24,22 +24,31 @@ public class VanzareRepo implements VanzareRepoInterface {
     private void setPreparedStatement(Vanzare entity, PreparedStatement preStmt) throws SQLException {
         preStmt.setLong(1,entity.getFestival().getId());
         preStmt.setDate(2,entity.getDate());
+        preStmt.setLong(3,entity.getSuma());
     }
 
     @Override
     public Vanzare add(Vanzare entity) {
         logger.traceEntry("saving task {}",entity);
         Connection con=dbUtils.getConnection();
-        try(PreparedStatement preStmt=con.prepareStatement("insert into Vanzare (festival_id,date) values(?,?)")){
+        try(PreparedStatement preStmt=con.prepareStatement("insert into vanzari (id_spectacol,date, suma) values(?,?, ?)")){
             setPreparedStatement(entity,preStmt);
             int result=preStmt.executeUpdate();
             logger.trace("Saved {} instances",result);
+            try (ResultSet generatedKeys = preStmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    entity.setId(generatedKeys.getLong(1));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
         }catch (SQLException ex){
             logger.error(ex);
             System.err.println("Error DB"+ex);
         }
         logger.traceExit();
-        return null;
+        return entity;
     }
 
     @Override
@@ -167,5 +176,25 @@ public class VanzareRepo implements VanzareRepoInterface {
         }
         logger.traceExit(sold);
         return sold;
+    }
+
+    @Override
+    public Iterable<Vanzare> getBySpectacolId(Long id) {
+        logger.traceEntry();
+        Connection con=dbUtils.getConnection();
+        List<Vanzare> vanzare = new ArrayList<>();
+        try(PreparedStatement preStmt=con.prepareStatement("select * from Vanzare where id_spectacol=?")){
+            preStmt.setLong(1,id);
+            try(ResultSet result=preStmt.executeQuery()){
+                while(result.next()){
+                    vanzare.add(getEntityFromResultSet(result));
+                }
+            }
+        }catch (SQLException ex){
+            logger.error(ex);
+            System.err.println("Error DB"+ex);
+        }
+        logger.traceExit(vanzare);
+        return vanzare;
     }
 }

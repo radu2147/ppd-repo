@@ -23,6 +23,7 @@ public class Vanzare extends Entity<Long> implements Serializable {
         super(id);
         this.date = date;
         this.spectacol = spectacol;
+        suma = 0;
     }
 
     public Spectacol getFestival() {

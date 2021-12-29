@@ -53,7 +53,7 @@ public class StartObjectClient extends Application {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         var currentDate = formatter.format(date);
-        Integer nbOfShows = 10;
+        Integer nbOfShows = 3;
         Integer totalSeats = 100;
 
 
@@ -66,8 +66,7 @@ public class StartObjectClient extends Application {
                 makeASell(nbOfShows, totalSeats, date, server);
             }
         };
-
-        executor.scheduleAtFixedRate(periodicTask, 0, 2, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(periodicTask, 0, 5, TimeUnit.SECONDS);
     }
 
     public void makeASell(Integer nbOfShows, Integer totalSeats, Date date, IServices server) {
@@ -75,18 +74,16 @@ public class StartObjectClient extends Application {
 
         Integer showId = randomData.getShowId(nbOfShows);
         List<Integer> seats = randomData.getSeats(totalSeats);
-//        System.out.println("showId " + showId);
-//        System.out.println("seats " + seats.get(0));
-//
+
         try {
             System.out.println("Inside try");
-            server.addVanzare(showId, (java.sql.Date) date, seats);
+            server.addVanzare(showId, new java.sql.Date(date.getTime()), seats);
 
         } catch (ServiceException e) {
             e.printStackTrace();
         }
 
-//        System.out.println("After 2 seconds");
+       System.out.println("After 2 seconds");
 
     }
 }

@@ -7,7 +7,7 @@ import service.*;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 
 public class ServicesImpl implements IServices {
@@ -15,6 +15,8 @@ public class ServicesImpl implements IServices {
     private LoginService loginService;
     private MainPageService mainPageService;
     private Map<String,IObserver> loggedClients;
+    static final int SECONDS = 5;
+    private final ScheduledExecutorService checkExecutor = Executors.newScheduledThreadPool(1);
 
     public ServicesImpl(LoginService loginService, MainPageService mainPageService) {
         this.loginService=loginService;
@@ -36,5 +38,16 @@ public class ServicesImpl implements IServices {
         } catch (ValidationException e) {
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    public synchronized void check(){
+//        checkExecutor.schedule(null, SECONDS, TimeUnit.SECONDS);
+//        try {
+//            checkExecutor.awaitTermination(1, TimeUnit.DAYS);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        checkExecutor.shutdown();
     }
 }

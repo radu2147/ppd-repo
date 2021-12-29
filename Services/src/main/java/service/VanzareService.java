@@ -28,9 +28,14 @@ public class VanzareService {
     public Vanzare addVanzare(Long festival_id, Date date, List<Integer> seats) throws ValidationException {
         Vanzare vanzare =new Vanzare(0L, festivalRepo.getOne(festival_id), date);
         validator.validate(vanzare);
+        var saved = VanzareRepo.add(vanzare);
         seats.stream()
-                .map(x -> new VanzareLocuri(0L, vanzare, x))
+                .map(x -> new VanzareLocuri(0L, saved, x))
                 .forEach(it -> VanzareLocuriRepo.add(it));
-        return VanzareRepo.add(vanzare);
+        return saved;
+    }
+
+    public boolean check() {
+        return true;
     }
 }

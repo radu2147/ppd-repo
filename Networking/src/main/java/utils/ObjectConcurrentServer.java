@@ -4,10 +4,13 @@ import objectProtocol.ClientObjectWorker;
 import service.IServices;
 
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class ObjectConcurrentServer extends AbsConcurrentServer {
     private IServices services;
+    private ExecutorService executor = Executors.newFixedThreadPool(5);
     public ObjectConcurrentServer(int port, IServices server) {
         super(port);
         this.services = server;
@@ -16,10 +19,8 @@ public class ObjectConcurrentServer extends AbsConcurrentServer {
     }
 
     @Override
-    protected Thread createWorker(Socket client) {
-        ClientObjectWorker worker=new ClientObjectWorker(services, client);
-        Thread tw=new Thread(worker);
-        return tw;
+    protected Runnable createWorker(Socket client) {
+        return new ClientObjectWorker(services, client);
     }
 
 

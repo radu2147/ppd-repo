@@ -22,9 +22,8 @@ objectProtocol/ErrorResponse.java
  objectProtocol.ErrorResponse
 objectProtocol/OkResponse.java
  objectProtocol.OkResponse
-objectProtocol/ServicesObjectProxy.java
- objectProtocol.ServicesObjectProxy
- objectProtocol.ServicesObjectProxy$ReaderThread
+objectProtocol/UpdateResponse.java
+ objectProtocol.UpdateResponse
 utils/ObjectConcurrentServer.java
  utils.ObjectConcurrentServer
 objectProtocol/FestivalResponse.java
@@ -37,5 +36,6 @@ objectProtocol/VanzareSoldRequest.java
  objectProtocol.VanzareSoldRequest
 objectProtocol/ClientObjectWorker.java
  objectProtocol.ClientObjectWorker
-objectProtocol/UpdateResponse.java
- objectProtocol.UpdateResponse
+objectProtocol/ServicesObjectProxy.java
+ objectProtocol.ServicesObjectProxy
+ objectProtocol.ServicesObjectProxy$ReaderThread

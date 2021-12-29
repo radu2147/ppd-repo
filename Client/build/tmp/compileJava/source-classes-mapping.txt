@@ -1,3 +1,5 @@
+controller/Controller.java
+ controller.Controller
 controller/SellVanzareController.java
  controller.SellVanzareController
 utils/AlertDisplayer.java
@@ -5,8 +7,6 @@ utils/AlertDisplayer.java
 controller/MainPageController.java
  controller.MainPageController
  controller.MainPageController$1
-controller/Controller.java
- controller.Controller
 utils/RandomData.java
  utils.RandomData
 StartObjectClient.java

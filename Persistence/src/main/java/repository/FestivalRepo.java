@@ -87,7 +87,7 @@ public class FestivalRepo implements FestivalRepoInterface {
         Date date=result.getDate("date");
         String name=result.getString("name");
         Long sold=result.getLong("sold");
-        Long priceVanzare = result.getLong("priceVanzare");
+        Long priceVanzare = result.getLong("price");
 
         return new Spectacol(i,date,name,sold, priceVanzare, null);
     }

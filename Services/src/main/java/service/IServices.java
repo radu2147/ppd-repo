@@ -1,6 +1,5 @@
 package service;
 
-//TODO User=username, password, name + delete customer
 import java.sql.Date;
 import java.util.List;
 

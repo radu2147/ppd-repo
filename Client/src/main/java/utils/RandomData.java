@@ -9,7 +9,7 @@ public class RandomData {
         Random rand = new Random();
 
         // Generate random integers in range 0 to nbOfShows
-        int showId = rand.nextInt(nbOfShows);
+        int showId = rand.nextInt(nbOfShows) + 1;
 
         return showId;
     }
@@ -18,7 +18,7 @@ public class RandomData {
         Random rand = new Random();
 
         // Generate random integers in range 0 to totalSeats
-        int nbOfSeats = rand.nextInt(totalSeats);
+        int nbOfSeats = rand.nextInt(totalSeats - 1) + 1;
 
         List<Integer> seats = new ArrayList<>();
 

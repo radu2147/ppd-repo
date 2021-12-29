@@ -36,7 +36,7 @@ public class ServicesObjectProxy implements IServices {
 
     @Override
     public void addVanzare(Integer festivalID, Date date, List<Integer> seats) throws ServiceException {
-        sendRequest(new VanzareRequest(new VanzareDTO(festivalID,date)));
+        sendRequest(new VanzareRequest(new VanzareDTO(festivalID,date, seats)));
         Response response=readResponse();
         if (response instanceof ErrorResponse){
             ErrorResponse err=(ErrorResponse)response;
