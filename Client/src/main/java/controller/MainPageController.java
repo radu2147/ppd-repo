@@ -79,7 +79,6 @@ public class MainPageController implements IObserver {
     TableColumn<SpetacolDTO, Time> tcSArtistOra;
     private void init(){
         labelUser.setText(account.getName());
-        initModelFestivals();
     }
     //TODO actualizez in ambele tabele
     //TODO selectez sa vand bilet din tabelul de search
@@ -121,33 +120,11 @@ public class MainPageController implements IObserver {
         });
         tableViewSArtist.setItems(festivalSModel);
     }
-    private void initModelFestivals(){
-        Iterable<SpetacolDTO> festivals= null;
-        try {
-            festivals = server.searchByDate(null);
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
-        List<SpetacolDTO> festivalList= StreamSupport.stream(festivals.spliterator(),false).collect(Collectors.toList());
-        festivalModel.setAll(festivalList);
-    }
-
-    private void initModelSFestivals(Date date){
-        Iterable<SpetacolDTO> festivals= null;
-        try {
-            festivals = server.searchByDate(date);
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
-        List<SpetacolDTO> festivalList= StreamSupport.stream(festivals.spliterator(),false).collect(Collectors.toList());
-        festivalSModel.setAll(festivalList);
-    }
 
     @FXML
     DatePicker datePickerArtist;
     public void onBtnSearchByDate(ActionEvent actionEvent) {
         LocalDate date=datePickerArtist.getValue();
-        initModelSFestivals(Date.valueOf(date));
     }
 
 
@@ -188,14 +165,6 @@ public class MainPageController implements IObserver {
             if(festivalDTO.getFestivalID().intValue()==Vanzare.getFestivalID()){
                 festivalModel.set(index,festivalDTO);
             }
-        }
-    }
-
-    public void logout() {
-        try {
-            server.logout(account,this);
-        } catch (ServiceException e) {
-            AlertDisplayer.showErrorMessage(null,e.getMessage());
         }
     }
 }

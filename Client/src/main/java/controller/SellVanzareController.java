@@ -49,7 +49,7 @@ public class SellVanzareController {
     public void onBtnSell(){
         var date= Date.valueOf(textFieldNumeCumparator.getText());
         try {
-            server.sellVanzare(festival.getFestivalID().intValue(), date);
+            server.addVanzare(festival.getFestivalID().intValue(), date, null);
             AlertDisplayer.showMessage(null, Alert.AlertType.CONFIRMATION,"Success!","Biletele au fost vandute cu succes!");
         } catch (ServiceException e) {
             AlertDisplayer.showErrorMessage(null,e.getMessage());

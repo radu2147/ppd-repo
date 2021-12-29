@@ -54,7 +54,7 @@ public class FestivalRepo implements FestivalRepoInterface {
     public Spectacol add(Spectacol entity) {
         logger.traceEntry("saving task {}",entity);
         Connection con=dbUtils.getConnection();
-        try(PreparedStatement preStmt=con.prepareStatement("insert into festival (date,name,sold,priceVanzare) values(?,?,?,?)")){
+        try(PreparedStatement preStmt=con.prepareStatement("insert into spectacole (date,name,sold,priceVanzare) values(?,?,?,?)")){
             setPreparedStatement(entity,preStmt);
             int result=preStmt.executeUpdate();
             logger.trace("Saved {} instances",result);
@@ -97,7 +97,7 @@ public class FestivalRepo implements FestivalRepoInterface {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
         Spectacol spectacol =null;
-        try(PreparedStatement preStmt=con.prepareStatement("select * from festival where id=?")){
+        try(PreparedStatement preStmt=con.prepareStatement("select * from spectacole where id=?")){
             preStmt.setLong(1,id);
             try(ResultSet result=preStmt.executeQuery()){
                 while(result.next()){

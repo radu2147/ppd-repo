@@ -12,6 +12,9 @@ import javafx.stage.WindowEvent;
 import service.*;
 import utils.AlertDisplayer;
 
+import java.sql.Date;
+import java.util.List;
+
 public class Controller{
 
     IServices server;
@@ -39,34 +42,15 @@ public class Controller{
         if(username.isEmpty() || password.isEmpty()){
             AlertDisplayer.showMessage(null, Alert.AlertType.ERROR,"Eroare!","Username sau parola gresita!");
         }
-        Account account=null;
-        try {
-            account=server.login(new Account(username, password, null),ctrl);
-
-        } catch (BadCredentialsException | ServiceException e) {
-            AlertDisplayer.showErrorMessage(null,e.getMessage());
-            return;
-        }
-        connect(account);
         textFieldPassword.getScene().getWindow().hide();
-    }
 
-    private void connect(Account account){
-        Stage stage=new Stage();
-        //stage.setTitle("Window for " +account.getName());
-        stage.setScene(new Scene(parent));
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                ctrl.logout();
-                System.exit(0);
-            }
-        });
-
-        stage.show();
-        ctrl.setAccount(account);
-        //((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+        // quick test
+        try{
+            this.server.addVanzare(1, Date.valueOf("2019-09-09"), List.of(1, 2, 3, 4));
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
     }
 
 }

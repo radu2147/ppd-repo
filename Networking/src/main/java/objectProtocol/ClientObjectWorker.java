@@ -67,52 +67,12 @@ public class ClientObjectWorker implements Runnable, IObserver {
 
     private Response handleRequest(Request request){
         Response response=null;
-        if (request instanceof LoginRequest){
-            System.out.println("Login request ...");
-            LoginRequest logReq=(LoginRequest)request;
-            Account user= logReq.getUser();
-            try {
-                Account account=server.login(user,this);
-                //TODO trimite numele
-//                return new OkResponse();
-                return new LoginResponse(account);
-            } catch (ServiceException | BadCredentialsException e) {
-                connected=false;
-                return new ErrorResponse(e.getMessage());
-            }
-        }
-        if (request instanceof FestivalRequest){
-            System.out.println("Festival request");
-            FestivalRequest festivalReq=(FestivalRequest) request;
-            Date date = festivalReq.getDate();
-            try {
-                Iterable<SpetacolDTO> festivalDTOS=server.searchByDate(date);
-                return new FestivalResponse(festivalDTOS);
-
-            } catch (ServiceException e) {
-                connected=false;
-                return new ErrorResponse(e.getMessage());
-            }
-        }
-        if (request instanceof LogoutRequest){
-            System.out.println("Logout request");
-            LogoutRequest logReq=(LogoutRequest)request;
-            Account user= logReq.getUser();
-            try {
-                server.logout(user, this);
-                connected=false;
-                return new OkResponse();
-
-            } catch (ServiceException e) {
-               return new ErrorResponse(e.getMessage());
-            }
-        }
         if(request instanceof VanzareRequest){
             System.out.println("Sell Vanzare request");
             VanzareRequest sellVanzareRequest=(VanzareRequest) request;
             VanzareDTO VanzareDTO= sellVanzareRequest.getVanzareDTO();
             try {
-                server.sellVanzare(VanzareDTO.getFestivalID(), VanzareDTO.getDate());
+                server.addVanzare(VanzareDTO.getFestivalID(), VanzareDTO.getDate(), VanzareDTO.getSeats());
                 return new OkResponse();
             } catch (ServiceException e) {
                 return new ErrorResponse(e.getMessage());

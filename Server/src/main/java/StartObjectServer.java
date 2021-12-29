@@ -26,11 +26,12 @@ public class StartObjectServer {
         ArtistRepo artistRepo=new ArtistRepo(serverProps);
         FestivalRepo festivalRepo=new FestivalRepo(serverProps);
         VanzareRepo VanzareRepo=new VanzareRepo(serverProps);
+        var vanzareLocuriRepo = new VanzareLocuriRepo(serverProps);
 
         EmployeeService userService=new EmployeeService(userRepo);
         ArtistService artistService=new ArtistService(artistRepo);
         FestivalService festivalService=new FestivalService(festivalRepo,artistRepo);
-        VanzareService VanzareService=new VanzareService(VanzareRepo,festivalRepo);
+        VanzareService VanzareService=new VanzareService(VanzareRepo,festivalRepo, vanzareLocuriRepo);
         MainPageService mainPageService=new MainPageService(artistService,festivalService,VanzareService,userService);
 
         LoginService loginService=new LoginService(new AccountRepo(serverProps));

@@ -7,6 +7,7 @@ import domain.validators.ValidationException;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainPageService {
     private final ArtistService artistService;
@@ -21,25 +22,7 @@ public class MainPageService {
         this.employeeService = employeeService;
     }
 
-    public Iterable<SpetacolDTO> getFestivals() {
-        Iterable<Spectacol> festivalList = festivalService.getAll();
-        ArrayList<SpetacolDTO> ret = new ArrayList<>();
-        festivalList.forEach(x -> {
-            ret.add(new SpetacolDTO(x.getId(), x.getName(), x.getDate(), x.getSold(), x.getPriceVanzare()));
-        });
-        return ret;
-    }
-
-    public Iterable<SpetacolDTO> getFestivalsByDate(Date date) {
-        Iterable<Spectacol> festivalList = festivalService.getByDate(date);
-        ArrayList<SpetacolDTO> ret = new ArrayList<>();
-        festivalList.forEach(x -> {
-            ret.add(new SpetacolDTO(x.getId(), x.getName(), x.getDate(), x.getSold(), x.getPriceVanzare()));
-        });
-        return ret;
-    }
-
-    public Vanzare sellVanzare(Long festivalID, Date seats) throws ValidationException {
-        return VanzareService.addVanzare(festivalID, seats);
+    public Vanzare sellVanzare(Long festivalID, Date seats, List<Integer> s) throws ValidationException {
+        return VanzareService.addVanzare(festivalID, seats, s);
     }
 }

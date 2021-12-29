@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Date;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -29,45 +30,12 @@ public class ServicesObjectProxy implements IServices {
     public ServicesObjectProxy(String host, int port) {
         this.host = host;
         this.port = port;
-        //responses=new ArrayList<Response>();
-        qresponses=new LinkedBlockingQueue<Response>();
-    }
-
-    public Account login(Account user, IObserver client) throws ServiceException {
         initializeConnection();
-        sendRequest(new LoginRequest(user));
-        Response response=readResponse();
-        if (response instanceof LoginResponse){
-            this.client=client;
-            return ((LoginResponse) response).getUser();
-        }
-        if (response instanceof OkResponse){
-            this.client=client;
-            return null;
-        }
-        if (response instanceof ErrorResponse){
-            ErrorResponse err=(ErrorResponse)response;
-            closeConnection();
-            throw new ServiceException(err.getMessage());
-        }
-        return null;
+        qresponses= new LinkedBlockingQueue<>();
     }
 
     @Override
-    public Iterable<SpetacolDTO> searchByDate(Date date) throws ServiceException {
-        sendRequest(new FestivalRequest(date));
-        Response response=readResponse();
-        if (response instanceof ErrorResponse){
-            ErrorResponse err=(ErrorResponse)response;
-            throw new ServiceException(err.getMessage());
-        }
-        if(response instanceof FestivalResponse)
-            return ((FestivalResponse)response).getFestivalDTOS();
-        return null;
-    }
-
-    @Override
-    public void sellVanzare(Integer festivalID, Date date) throws ServiceException {
+    public void addVanzare(Integer festivalID, Date date, List<Integer> seats) throws ServiceException {
         sendRequest(new VanzareRequest(new VanzareDTO(festivalID,date)));
         Response response=readResponse();
         if (response instanceof ErrorResponse){
@@ -75,16 +43,6 @@ public class ServicesObjectProxy implements IServices {
             throw new ServiceException(err.getMessage());
         }
         System.out.println("Vanzare sold - proxy");
-    }
-
-    public void logout(Account user, IObserver client) throws ServiceException {
-        sendRequest(new LogoutRequest(user));
-        Response response=readResponse();
-        closeConnection();
-        if (response instanceof ErrorResponse){
-            ErrorResponse err=(ErrorResponse)response;
-            throw new ServiceException(err.getMessage());
-        }
     }
 
     private void closeConnection() {

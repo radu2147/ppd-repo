@@ -3,7 +3,7 @@ package objectProtocol;
 import domain.VanzareDTO;
 
 public class VanzareRequest implements Request{
-    private VanzareDTO VanzareDTO;
+    private final VanzareDTO VanzareDTO;
 
     public VanzareRequest(VanzareDTO VanzareDTO) {
         this.VanzareDTO = VanzareDTO;
@@ -13,7 +13,4 @@ public class VanzareRequest implements Request{
         return VanzareDTO;
     }
 
-    public void setVanzareDTO(VanzareDTO VanzareDTO) {
-        this.VanzareDTO = VanzareDTO;
-    }
 }

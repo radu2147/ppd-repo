@@ -1,5 +1,5 @@
-repository/FestivalRepo.java
- repository.FestivalRepo
+repository/VanzareLocuriRepoInterface.java
+ repository.VanzareLocuriRepoInterface
 jdbcUtils/JdbcUtils.java
  jdbcUtils.JdbcUtils
 repository/CustomerRepoInterface.java
@@ -28,3 +28,7 @@ repository/ArtistRepo.java
  repository.ArtistRepo
 repository/CustomerRepo.java
  repository.CustomerRepo
+repository/VanzareLocuriRepo.java
+ repository.VanzareLocuriRepo
+repository/FestivalRepo.java
+ repository.FestivalRepo
