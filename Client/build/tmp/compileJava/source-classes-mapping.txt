@@ -1,13 +1,16 @@
-ClientMain.java
- ClientMain
-utils/AlertDisplayer.java
- utils.AlertDisplayer
 controller/SellVanzareController.java
  controller.SellVanzareController
+utils/AlertDisplayer.java
+ utils.AlertDisplayer
 controller/MainPageController.java
  controller.MainPageController
  controller.MainPageController$1
-StartObjectClient.java
- StartObjectClient
 controller/Controller.java
  controller.Controller
+utils/RandomData.java
+ utils.RandomData
+StartObjectClient.java
+ StartObjectClient
+ StartObjectClient$1
+ClientMain.java
+ ClientMain

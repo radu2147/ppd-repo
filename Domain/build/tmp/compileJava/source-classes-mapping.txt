@@ -20,11 +20,11 @@ domain/Vanzare.java
  domain.Vanzare
 domain/validators/ValidationException.java
  domain.validators.ValidationException
-domain/validators/FestivalValidator.java
- domain.validators.FestivalValidator
+domain/VanzareDTO.java
+ domain.VanzareDTO
 domain/VanzareLocuri.java
  domain.VanzareLocuri
 domain/Entity.java
  domain.Entity
-domain/VanzareDTO.java
- domain.VanzareDTO
+domain/validators/FestivalValidator.java
+ domain.validators.FestivalValidator

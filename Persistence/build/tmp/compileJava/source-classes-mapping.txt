@@ -1,7 +1,9 @@
-repository/VanzareLocuriRepoInterface.java
- repository.VanzareLocuriRepoInterface
+repository/FestivalRepo.java
+ repository.FestivalRepo
 jdbcUtils/JdbcUtils.java
  jdbcUtils.JdbcUtils
+repository/VanzareLocuriRepo.java
+ repository.VanzareLocuriRepo
 repository/CustomerRepoInterface.java
  repository.CustomerRepoInterface
 repository/VanzareRepoInterface.java
@@ -24,11 +26,9 @@ repository/EmployeeRepoInterface.java
  repository.EmployeeRepoInterface
 repository/EmployeeRepo.java
  repository.EmployeeRepo
+repository/VanzareLocuriRepoInterface.java
+ repository.VanzareLocuriRepoInterface
 repository/ArtistRepo.java
  repository.ArtistRepo
 repository/CustomerRepo.java
  repository.CustomerRepo
-repository/VanzareLocuriRepo.java
- repository.VanzareLocuriRepo
-repository/FestivalRepo.java
- repository.FestivalRepo

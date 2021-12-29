@@ -1,86 +1,92 @@
-
-import controller.Controller;
-import controller.MainPageController;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+
 import javafx.stage.Stage;
 import objectProtocol.ServicesObjectProxy;
 import service.IServices;
+import service.ServiceException;
+import utils.RandomData;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class StartObjectClient extends Application {
-    private static int defaultPort =55555;
-    private static String defaultServer="localhost";
+    private static int defaultPort = 55555;
+    private static String defaultServer = "localhost";
     public static void main(String[] args) {
         launch(args);
-    }
-    private void initView(Stage primaryStage,IServices server) throws IOException {
-        FXMLLoader loginViewLoader = new FXMLLoader();
-        loginViewLoader.setLocation(getClass().getResource("views/loginView.fxml"));
-        AnchorPane anchorPane = loginViewLoader.load();
-        primaryStage.setScene(new Scene(anchorPane));
-
-        Controller controller= loginViewLoader.getController();
-        controller.setServer(server);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Properties clientProps=new Properties();
+        Properties clientProps = new Properties();
         try {
             clientProps.load(StartObjectClient.class.getResourceAsStream("/client.properties"));
             System.out.println("Client properties set. ");
             clientProps.list(System.out);
         } catch (IOException e) {
-            System.err.println("Cannot find client.properties "+e);
+            System.err.println("Cannot find client.properties " + e);
             return;
         }
-        String serverIP=clientProps.getProperty("server.host",defaultServer);
-        int serverPort= defaultPort;
+
+        String serverIP = clientProps.getProperty("server.host", defaultServer);
+        int serverPort = defaultPort;
+
         try{
-            serverPort=Integer.parseInt(clientProps.getProperty("server.port"));
+            serverPort = Integer.parseInt(clientProps.getProperty("server.port"));
         }catch(NumberFormatException ex){
-            System.err.println("Wrong port number "+ex.getMessage());
-            System.out.println("Using default port: "+ defaultPort);
+            System.err.println("Wrong port number " + ex.getMessage());
+            System.out.println("Using default port: " + defaultPort);
         }
-        System.out.println("Using server IP "+serverIP);
-        System.out.println("Using server port "+serverPort);
-        IServices server=new ServicesObjectProxy(serverIP, serverPort);
 
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("views/loginView.fxml"));
-        Parent root=loader.load();
+        System.out.println("Using server IP " + serverIP);
+        System.out.println("Using server port " + serverPort);
+        IServices server = new ServicesObjectProxy(serverIP, serverPort);
 
 
-        Controller ctrl =
-                loader.<Controller>getController();
-        ctrl.setServer(server);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        var currentDate = formatter.format(date);
+        Integer nbOfShows = 10;
+        Integer totalSeats = 100;
 
 
+        ScheduledExecutorService executor =
+                Executors.newSingleThreadScheduledExecutor();
 
+        Runnable periodicTask = new Runnable() {
+            public void run() {
+                // Invoke method(s) to do the work
+                makeASell(nbOfShows, totalSeats, date, server);
+            }
+        };
 
-        FXMLLoader mloader = new FXMLLoader(
-                getClass().getClassLoader().getResource("views/mainPageView.fxml"));
-        Parent croot=mloader.load();
+        executor.scheduleAtFixedRate(periodicTask, 0, 2, TimeUnit.SECONDS);
+    }
 
+    public void makeASell(Integer nbOfShows, Integer totalSeats, Date date, IServices server) {
+        RandomData randomData = new RandomData();
 
-        MainPageController chatCtrl =
-                mloader.<MainPageController>getController();
-        chatCtrl.setServer(server);
+        Integer showId = randomData.getShowId(nbOfShows);
+        List<Integer> seats = randomData.getSeats(totalSeats);
+//        System.out.println("showId " + showId);
+//        System.out.println("seats " + seats.get(0));
+//
+        try {
+            System.out.println("Inside try");
+            server.addVanzare(showId, (java.sql.Date) date, seats);
 
-        ctrl.setController(chatCtrl);
-        ctrl.setParent(croot);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
 
-        //initView(primaryStage,server);
-        primaryStage.setTitle("Login Festival Vanzares");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setWidth(800);
-        primaryStage.show();
+//        System.out.println("After 2 seconds");
+
     }
 }
