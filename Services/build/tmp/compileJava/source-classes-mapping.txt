@@ -8,17 +8,17 @@ service/ArtistService.java
  service.ArtistService
 service/ServiceException.java
  service.ServiceException
-service/IObserver.java
- service.IObserver
+service/EmployeeService.java
+ service.EmployeeService
 service/LoginService.java
  service.LoginService
 service/VanzareService.java
  service.VanzareService
 service/Services.java
  service.Services
+service/IObserver.java
+ service.IObserver
 service/MainPageService.java
  service.MainPageService
 service/FestivalService.java
  service.FestivalService
-service/EmployeeService.java
- service.EmployeeService

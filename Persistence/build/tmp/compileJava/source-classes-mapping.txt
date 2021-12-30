@@ -14,8 +14,8 @@ repository/AccountRepoInterface.java
  repository.AccountRepoInterface
 repository/FestivalRepoInterface.java
  repository.FestivalRepoInterface
-repository/FestivalRepo.java
- repository.FestivalRepo
+repository/VanzareRepo.java
+ repository.VanzareRepo
 repository/RepositoryInterface.java
  repository.RepositoryInterface
 repository/Repository.java
@@ -30,5 +30,5 @@ repository/VanzareLocuriRepo.java
  repository.VanzareLocuriRepo
 repository/EmployeeRepo.java
  repository.EmployeeRepo
-repository/VanzareRepo.java
- repository.VanzareRepo
+repository/FestivalRepo.java
+ repository.FestivalRepo

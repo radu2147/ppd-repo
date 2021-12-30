@@ -38,6 +38,10 @@ public class Vanzare extends Entity<Long> implements Serializable {
         return suma;
     }
 
+    public void setSuma(Integer suma){
+        this.suma = suma;
+    }
+
     @Override
     public String toString() {
         return "Vanzare{" +

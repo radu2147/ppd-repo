@@ -158,13 +158,7 @@ public class MainPageController implements IObserver {
     }
 
     @Override
-    public void VanzaresSold(VanzareDTO Vanzare) throws ServiceException {
-        //TODO implement
-        for(int index=0;index<festivalModel.size();index++){
-            SpetacolDTO festivalDTO=festivalModel.get(index);
-            if(festivalDTO.getFestivalID().intValue()==Vanzare.getFestivalID()){
-                festivalModel.set(index,festivalDTO);
-            }
-        }
+    public void shutDown() {
+
     }
 }
