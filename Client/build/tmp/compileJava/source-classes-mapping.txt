@@ -1,16 +1,15 @@
-controller/Controller.java
- controller.Controller
-controller/SellVanzareController.java
- controller.SellVanzareController
+utils/RandomData.java
+ utils.RandomData
+StartObjectClient.java
+ StartObjectClient
 utils/AlertDisplayer.java
  utils.AlertDisplayer
 controller/MainPageController.java
  controller.MainPageController
  controller.MainPageController$1
-utils/RandomData.java
- utils.RandomData
-StartObjectClient.java
- StartObjectClient
- StartObjectClient$1
+controller/Controller.java
+ controller.Controller
+controller/SellVanzareController.java
+ controller.SellVanzareController
 ClientMain.java
  ClientMain

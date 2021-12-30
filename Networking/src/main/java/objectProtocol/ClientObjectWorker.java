@@ -15,7 +15,7 @@ import java.net.Socket;
 import java.sql.Date;
 
 
-public class ClientObjectWorker implements Runnable, IObserver {
+public class ClientObjectWorker implements Worker {
     private IServices server;
     private Socket connection;
 
@@ -37,7 +37,7 @@ public class ClientObjectWorker implements Runnable, IObserver {
 
     public void run() {
         while(connected){
-            try {;
+            try {
                 Object request=input.readObject();
                 System.out.println("Run of clientobjworker"+request);
                 Object response=handleRequest((Request)request);
@@ -55,7 +55,15 @@ public class ClientObjectWorker implements Runnable, IObserver {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            if(!connected){
+                try {
+                    sendResponse(new ShutdownResponse());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        System.out.println("Shutting down worker...");
         try {
             input.close();
             output.close();
@@ -89,12 +97,7 @@ public class ClientObjectWorker implements Runnable, IObserver {
     }
 
     @Override
-    public void VanzaresSold(VanzareDTO Vanzare) throws ServiceException {
-        System.out.println("Vanzare sold "+Vanzare);
-        try {
-            sendResponse(new VanzareSoldResponse(Vanzare));
-        } catch (IOException e) {
-            throw new ServiceException("Sending error: "+e);
-        }
+    public void shutDown() {
+        this.connected = false;
     }
 }

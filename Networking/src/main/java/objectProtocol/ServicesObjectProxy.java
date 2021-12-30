@@ -10,18 +10,20 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Date;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
 
-public class ServicesObjectProxy implements IServices {
+public class ServicesObjectProxy implements IServices, IObserver {
     private final String host;
     private final int port;
 
     private IObserver client;
 
+    private Future<?> task;
+
     private ObjectInputStream input;
     private ObjectOutputStream output;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
     private Socket connection;
 
     //private List<Response> responses;
@@ -92,8 +94,7 @@ public class ServicesObjectProxy implements IServices {
         }
     }
     private void startReader(){
-        Thread tw=new Thread(new ReaderThread());
-        tw.start();
+        task = executor.submit(new ReaderThread());
     }
 
 
@@ -103,12 +104,13 @@ public class ServicesObjectProxy implements IServices {
             VanzareSoldResponse VanzareSoldResponse=(VanzareSoldResponse) update;
             VanzareDTO VanzareDTO=VanzareSoldResponse.getVanzareDTO();
             System.out.println("Some Vanzares were sold");
-            try{
-                client.VanzaresSold(VanzareDTO);
-            }catch (ServiceException e){
-                e.printStackTrace();
-            }
         }
+    }
+
+    @Override
+    public void shutDown() {
+        closeConnection();
+        executor.shutdown();
     }
 
     private class ReaderThread implements Runnable{
@@ -118,8 +120,9 @@ public class ServicesObjectProxy implements IServices {
                     System.out.println("waiting for response");
                     Object response=input.readObject();
                     System.out.println("response received "+response);
-                    if (response instanceof UpdateResponse){
-                         handleUpdate((UpdateResponse)response);
+                    if (response instanceof ShutdownResponse){
+                         finished = true;
+                         shutDown();
                     }else{
                         try {
                             qresponses.put((Response)response);

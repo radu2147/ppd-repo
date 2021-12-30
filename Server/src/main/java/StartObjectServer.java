@@ -8,6 +8,7 @@ import utils.ServerException;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Timer;
 
 
 public class StartObjectServer {
@@ -45,10 +46,6 @@ public class StartObjectServer {
         }
         System.out.println("Starting server on port: "+serverPort);
         AbstractServer server = new ObjectConcurrentServer(serverPort, services);
-        try {
-                server.start();
-        } catch (ServerException e) {
-                System.err.println("Error starting the server" + e.getMessage());
-        }
+        server.start();
     }
 }

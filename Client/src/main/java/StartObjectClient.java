@@ -60,16 +60,14 @@ public class StartObjectClient extends Application {
         ScheduledExecutorService executor =
                 Executors.newSingleThreadScheduledExecutor();
 
-        Runnable periodicTask = new Runnable() {
-            public void run() {
-                // Invoke method(s) to do the work
-                makeASell(nbOfShows, totalSeats, date, server);
-            }
+        Runnable periodicTask = () -> {
+            // Invoke method(s) to do the work
+            makeASell(nbOfShows, totalSeats, date, server, executor);
         };
         executor.scheduleAtFixedRate(periodicTask, 0, 5, TimeUnit.SECONDS);
     }
 
-    public void makeASell(Integer nbOfShows, Integer totalSeats, Date date, IServices server) {
+    public void makeASell(Integer nbOfShows, Integer totalSeats, Date date, IServices server, ScheduledExecutorService executor) {
         RandomData randomData = new RandomData();
 
         Integer showId = randomData.getShowId(nbOfShows);
@@ -81,6 +79,7 @@ public class StartObjectClient extends Application {
 
         } catch (ServiceException e) {
             e.printStackTrace();
+            executor.shutdown();
         }
 
        System.out.println("After 2 seconds");
