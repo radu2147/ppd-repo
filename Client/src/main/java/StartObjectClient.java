@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 abstract class FutureRunnable implements Runnable {
     private Future<?> task;
@@ -62,22 +59,28 @@ public class StartObjectClient {
         Integer nbOfShows = 3;
         Integer totalSeats = 100;
 
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         FutureRunnable periodicTask = new FutureRunnable() {
             @Override
             public void run() {
-                try {
-                    makeASell(nbOfShows, totalSeats, date, server);
-                } catch (VanzareException e) {
-                    System.out.println(e.getMessage());
-                }
-                catch (ServiceException e){
-                    System.out.println(getTask().cancel(true));
+                while(true) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                    try {
+                        makeASell(nbOfShows, totalSeats, date, server);
+                    } catch (VanzareException e) {
+                        System.out.println(e.getMessage());
+                    } catch (ServiceException e) {
+                        executor.shutdownNow();
+                        break;
+                    }
                 }
             }
         };
-        var task = executor.scheduleAtFixedRate(periodicTask, 0, 2, TimeUnit.SECONDS);
-        periodicTask.setTask(task);
+        executor.execute(periodicTask);
     }
 
     public static void makeASell(Integer nbOfShows, Integer totalSeats, Date date, IServices server) throws ServiceException, VanzareException {

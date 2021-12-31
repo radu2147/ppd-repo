@@ -97,8 +97,8 @@ public class ServicesObjectProxy implements IServices, IObserver {
 
     @Override
     public void shutDown() {
-        closeConnection();
         executor.shutdownNow();
+        closeConnection();
     }
 
     private class ReaderThread implements Runnable{
@@ -109,7 +109,7 @@ public class ServicesObjectProxy implements IServices, IObserver {
                     Object response=input.readObject();
                     System.out.println("response received "+response);
                     if (response instanceof ShutdownResponse){
-                         return;
+                         break;
                     }else{
                         try {
                             qresponses.put((Response)response);
