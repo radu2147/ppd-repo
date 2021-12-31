@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 public abstract class AbstractServer {
     private final int port;
     private ServerSocket server=null;
-    private final int TIME_TO_RUN = 10;
+    private final int TIME_TO_RUN = 120;
     public AbstractServer( int port){
               this.port=port;
     }

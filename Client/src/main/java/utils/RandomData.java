@@ -1,8 +1,6 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class RandomData {
     public Integer getShowId(Integer nbOfShows) {
@@ -26,6 +24,10 @@ public class RandomData {
             Integer seat = rand.nextInt(totalSeats);
             seats.add(seat);
         }
+
+        Set<Integer> set = new HashSet<>(seats);
+        seats.clear();
+        seats.addAll(set);
 
         return seats;
     }
