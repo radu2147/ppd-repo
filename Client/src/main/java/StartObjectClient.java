@@ -74,15 +74,16 @@ public class StartObjectClient extends Application {
         List<Integer> seats = randomData.getSeats(totalSeats);
 
         try {
-            System.out.println("Inside try");
+            System.out.println("\nNOTIFICATION:");
             server.addVanzare(showId, new java.sql.Date(date.getTime()), seats);
+            System.out.println("Vanzare reusita!");
 
         } catch (ServiceException e) {
-            e.printStackTrace();
-            executor.shutdown();
+            if (e.getMessage().contains("Vanzare nereusita"))
+                System.out.println(e.getMessage());
+            else
+                executor.shutdown();
         }
-
-       System.out.println("After 2 seconds");
 
     }
 }
