@@ -1,14 +1,14 @@
-
-
-import repository.*;
-import service.*;
+import repository.FestivalRepo;
+import repository.VanzareLocuriRepo;
+import repository.VanzareRepo;
+import service.IServices;
+import service.MainPageService;
+import service.VanzareService;
 import utils.AbstractServer;
 import utils.ObjectConcurrentServer;
-import utils.ServerException;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Timer;
 
 
 public class StartObjectServer {
@@ -23,20 +23,13 @@ public class StartObjectServer {
             System.err.println("Cannot find server.properties "+e);
             return;
         }
-        EmployeeRepo userRepo=new EmployeeRepo(serverProps);
-        ArtistRepo artistRepo=new ArtistRepo(serverProps);
         FestivalRepo festivalRepo=new FestivalRepo(serverProps);
         VanzareRepo VanzareRepo=new VanzareRepo(serverProps);
         var vanzareLocuriRepo = new VanzareLocuriRepo(serverProps);
-
-        EmployeeService userService=new EmployeeService(userRepo);
-        ArtistService artistService=new ArtistService(artistRepo);
-        FestivalService festivalService=new FestivalService(festivalRepo,artistRepo);
         VanzareService VanzareService=new VanzareService(VanzareRepo,festivalRepo, vanzareLocuriRepo);
-        MainPageService mainPageService=new MainPageService(artistService,festivalService,VanzareService,userService);
+        MainPageService mainPageService=new MainPageService(VanzareService);
 
-        LoginService loginService=new LoginService(new AccountRepo(serverProps));
-        IServices services=new ServicesImpl(loginService, mainPageService);
+        IServices services=new ServicesImpl(mainPageService);
         int serverPort=defaultPort;
         try {
             serverPort = Integer.parseInt(serverProps.getProperty("server.port"));

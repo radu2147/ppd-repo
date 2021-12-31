@@ -1,24 +1,20 @@
-service/CustomerService.java
- service.CustomerService
-service/BadCredentialsException.java
- service.BadCredentialsException
-service/IServices.java
- service.IServices
+service/MainPageService.java
+ service.MainPageService
 service/EmployeeService.java
  service.EmployeeService
 service/ServiceException.java
  service.ServiceException
 service/IObserver.java
  service.IObserver
-service/LoginService.java
- service.LoginService
+service/Services.java
+ service.Services
 service/FestivalService.java
  service.FestivalService
 service/ArtistService.java
  service.ArtistService
 service/VanzareService.java
  service.VanzareService
-service/Services.java
- service.Services
-service/MainPageService.java
- service.MainPageService
+service/IServices.java
+ service.IServices
+service/VanzareException.java
+ service.VanzareException

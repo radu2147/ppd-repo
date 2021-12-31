@@ -1,9 +1,11 @@
 package objectProtocol;
 
-import domain.Account;
-import domain.SpetacolDTO;
 import domain.VanzareDTO;
-import service.*;
+import service.IObserver;
+import service.IServices;
+import service.ServiceException;
+import service.VanzareException;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,8 +20,6 @@ public class ServicesObjectProxy implements IServices, IObserver {
     private final int port;
 
     private IObserver client;
-
-    private Future<?> task;
 
     private ObjectInputStream input;
     private ObjectOutputStream output;
@@ -37,14 +37,13 @@ public class ServicesObjectProxy implements IServices, IObserver {
     }
 
     @Override
-    public void addVanzare(Integer festivalID, Date date, List<Integer> seats) throws ServiceException {
+    public void addVanzare(Integer festivalID, Date date, List<Integer> seats) throws ServiceException, VanzareException {
         sendRequest(new VanzareRequest(new VanzareDTO(festivalID,date, seats)));
         Response response=readResponse();
         if (response instanceof ErrorResponse){
             ErrorResponse err=(ErrorResponse)response;
-            throw new ServiceException(err.getMessage());
+            throw new VanzareException(err.getMessage());
         }
-        System.out.println("Vanzare sold - proxy");
     }
 
     private void closeConnection() {
@@ -65,7 +64,7 @@ public class ServicesObjectProxy implements IServices, IObserver {
             output.writeObject(request);
             output.flush();
         } catch (IOException e) {
-            throw new  ServiceException("Error sending object "+e);
+            throw new ServiceException("Error sending object "+e);
         }
 
     }
@@ -73,7 +72,6 @@ public class ServicesObjectProxy implements IServices, IObserver {
     private Response readResponse() throws ServiceException {
         Response response=null;
         try{
-
             response=qresponses.take();
 
         } catch (InterruptedException e) {
@@ -94,23 +92,13 @@ public class ServicesObjectProxy implements IServices, IObserver {
         }
     }
     private void startReader(){
-        task = executor.submit(new ReaderThread());
-    }
-
-
-    private void handleUpdate(UpdateResponse update){
-
-        if (update instanceof VanzareSoldResponse){
-            VanzareSoldResponse VanzareSoldResponse=(VanzareSoldResponse) update;
-            VanzareDTO VanzareDTO=VanzareSoldResponse.getVanzareDTO();
-            System.out.println("Some Vanzares were sold");
-        }
+        executor.submit(new ReaderThread());
     }
 
     @Override
     public void shutDown() {
         closeConnection();
-        executor.shutdown();
+        executor.shutdownNow();
     }
 
     private class ReaderThread implements Runnable{
@@ -121,21 +109,20 @@ public class ServicesObjectProxy implements IServices, IObserver {
                     Object response=input.readObject();
                     System.out.println("response received "+response);
                     if (response instanceof ShutdownResponse){
-                         finished = true;
-                         shutDown();
+                         return;
                     }else{
                         try {
                             qresponses.put((Response)response);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();  
+                            e.printStackTrace();
                         }
                     }
-                } catch (IOException e) {
-                    System.out.println("Reading error "+e);
-                } catch (ClassNotFoundException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     System.out.println("Reading error "+e);
                 }
             }
+            System.out.println("Closing...");
+            shutDown();
         }
     }
 }

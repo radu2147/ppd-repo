@@ -73,8 +73,4 @@ public class VanzareService {
 
         return duplicates;
     }
-
-    public boolean check() {
-        return true;
-    }
 }
