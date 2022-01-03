@@ -46,6 +46,11 @@ public class ServicesObjectProxy implements IServices, IObserver {
         }
     }
 
+    @Override
+    public void verificari() {
+
+    }
+
     private void closeConnection() {
         finished=true;
         try {

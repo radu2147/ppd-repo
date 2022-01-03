@@ -10,6 +10,9 @@ import repository.FestivalRepo;
 import repository.VanzareLocuriRepo;
 import repository.VanzareRepo;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,25 +20,25 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class VanzareService {
-    private final VanzareRepo VanzareRepo;
-    private final VanzareLocuriRepo VanzareLocuriRepo;
+    private final VanzareRepo vanzareRepo;
+    private final VanzareLocuriRepo vanzareLocuriRepo;
     private final FestivalRepo festivalRepo;
     private final Validator<Vanzare> validator=new VanzareValidator();
-    public VanzareService(VanzareRepo VanzareRepo, FestivalRepo festivalRepo, VanzareLocuriRepo VanzareLocuriRepo) {
-        this.VanzareRepo = VanzareRepo;
+    public VanzareService(VanzareRepo vanzareRepo, FestivalRepo festivalRepo, VanzareLocuriRepo vanzareLocuriRepo) {
+        this.vanzareRepo = vanzareRepo;
         this.festivalRepo = festivalRepo;
-        this.VanzareLocuriRepo = VanzareLocuriRepo;
+        this.vanzareLocuriRepo = vanzareLocuriRepo;
     }
 
     public Vanzare addVanzare(Long festival_id, Date date, List<Integer> seats) throws ValidationException {
-        var locuriDisponibile = VanzareLocuriRepo.getNrLocuri();
+        var locuriDisponibile = vanzareLocuriRepo.getNrLocuri();
         var locuriVanzare = seats.size();
 
         if (locuriVanzare > locuriDisponibile ) {
             throw new ValidationException("Vanzare nereusita! Locuri insuficiente!");
         }
 
-        List<Integer> locuri = VanzareLocuriRepo.getLocuri();
+        List<Integer> locuri = vanzareLocuriRepo.getLocuri();
         List<Integer> duplicatesSeats = checkSeats(locuri, seats);
 
         if (duplicatesSeats.size() > 0) {
@@ -49,12 +52,12 @@ public class VanzareService {
         vanzare.setSuma(suma);
         validator.validate(vanzare);
 
-        var saved = VanzareRepo.add(vanzare);
+        var saved = vanzareRepo.add(vanzare);
         seats.stream()
                 .map(x -> new VanzareLocuri(0L, saved, x))
-                .forEach(it -> VanzareLocuriRepo.add(it));
+                .forEach(it -> vanzareLocuriRepo.add(it));
 
-        VanzareLocuriRepo.updateLocuri(locuriDisponibile - locuriVanzare);
+        vanzareLocuriRepo.updateLocuri(locuriDisponibile - locuriVanzare);
 
         spectacol.setSold(spectacol.getSold() + saved.getSuma());
         festivalRepo.update(spectacol);
@@ -72,5 +75,72 @@ public class VanzareService {
         }
 
         return duplicates;
+    }
+
+    public String checkLocuri() {
+        String message = "";
+
+        Integer locuriVandute = vanzareLocuriRepo.getLocuriVandute();
+
+        Integer locuriDisponibile = vanzareLocuriRepo.getNrLocuri();
+
+        if(locuriDisponibile == 100 - locuriVandute) {
+            message = "corect";
+        }
+        else {
+            message = "incorect";
+        }
+
+        return message;
+    }
+
+    public String checkSold() {
+        String message = "";
+
+        Integer equals = 0;
+
+        List<Spectacol> totalSpectacole = (List<Spectacol>) festivalRepo.getAll();
+
+        List<Spectacol> soldSpectacole = (List<Spectacol>) vanzareRepo.getFestivalsSold();
+
+        for (Spectacol spectacol:  totalSpectacole) {
+            for (Spectacol soldSpectacol: soldSpectacole) {
+                if(spectacol.getId().equals(soldSpectacol.getId()) && spectacol.getSold().equals(soldSpectacol.getSold())) {
+                    equals ++;
+                }
+            }
+        }
+
+        if(equals.equals(soldSpectacole.size())) {
+            message = "corect";
+        }
+        else {
+            message = "incorect";
+        }
+
+        return message;
+    }
+
+    public void periodicCheck() {
+
+        File fname = new File("C:\\Users\\barza\\source\\repos\\An3-Sem1\\PPD\\P1-ClientServer\\ppd-repo\\verificari.txt");
+
+        try {
+            FileWriter writer = new FileWriter(fname, true);
+
+            String messageLocuri = checkLocuri();
+            String messageSold = checkSold();
+
+            writer.write(messageLocuri + " " + messageSold + "\n");
+
+            writer.close();
+        }
+        catch(IOException exception){
+            exception.printStackTrace();
+        }
+    }
+
+    public boolean check() {
+        return true;
     }
 }

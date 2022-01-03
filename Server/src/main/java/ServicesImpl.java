@@ -25,4 +25,8 @@ public class ServicesImpl implements IServices {
             throw new VanzareException(e.getMessage());
         }
     }
+
+    public void verificari() {
+        mainPageService.verificari();
+    }
 }

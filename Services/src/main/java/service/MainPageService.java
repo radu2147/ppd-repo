@@ -16,4 +16,12 @@ public class MainPageService {
     public Vanzare sellVanzare(Long festivalID, Date seats, List<Integer> s) throws ValidationException {
         return VanzareService.addVanzare(festivalID, seats, s);
     }
+
+    public void verificari() {
+        VanzareService.periodicCheck();
+    }
+
+    public boolean check(){
+        return VanzareService.check();
+    }
 }

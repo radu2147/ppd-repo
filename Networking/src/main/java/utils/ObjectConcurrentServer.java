@@ -7,6 +7,8 @@ import service.IServices;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class ObjectConcurrentServer extends AbsConcurrentServer {
@@ -16,6 +18,11 @@ public class ObjectConcurrentServer extends AbsConcurrentServer {
         this.services = server;
         System.out.println("ObjectConcurrentServer");
 
+    }
+
+    @Override
+    public void verificari() {
+        services.verificari();
     }
 
     @Override
