@@ -1,18 +1,14 @@
 package objectProtocol;
 
-import domain.Account;
-import domain.SpetacolDTO;
 import domain.VanzareDTO;
-import service.BadCredentialsException;
-import service.IObserver;
 import service.IServices;
 import service.ServiceException;
+import service.VanzareException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.Date;
 
 
 public class ClientObjectWorker implements Worker {
@@ -42,7 +38,7 @@ public class ClientObjectWorker implements Worker {
                 System.out.println("Run of clientobjworker"+request);
                 Object response=handleRequest((Request)request);
                 System.out.println(response);
-                if (response!=null){
+                if (response != null){
                    sendResponse((Response) response);
                 }
             } catch (IOException e) {
@@ -55,22 +51,9 @@ public class ClientObjectWorker implements Worker {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(!connected){
-                try {
-                    sendResponse(new ShutdownResponse());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         System.out.println("Shutting down worker...");
-        try {
-            input.close();
-            output.close();
-            connection.close();
-        } catch (IOException e) {
-            System.out.println("Error "+e);
-        }
+
     }
 
     private Response handleRequest(Request request){
@@ -82,7 +65,7 @@ public class ClientObjectWorker implements Worker {
             try {
                 server.addVanzare(VanzareDTO.getFestivalID(), VanzareDTO.getDate(), VanzareDTO.getSeats());
                 return new OkResponse();
-            } catch (ServiceException e) {
+            } catch (VanzareException | ServiceException e) {
                 return new ErrorResponse(e.getMessage());
             }
         }
@@ -98,6 +81,19 @@ public class ClientObjectWorker implements Worker {
 
     @Override
     public void shutDown() {
+        System.out.println("GOT HERE");
+        try {
+            sendResponse(new ShutdownResponse());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            input.close();
+            output.close();
+            connection.close();
+        } catch (IOException e) {
+            System.out.println("Error "+e);
+        }
         this.connected = false;
     }
 }

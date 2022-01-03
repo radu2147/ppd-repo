@@ -1,30 +1,36 @@
-import javafx.application.Application;
-
-import javafx.stage.Stage;
 import objectProtocol.ServicesObjectProxy;
 import service.IServices;
 import service.ServiceException;
+import service.VanzareException;
 import utils.RandomData;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+
+abstract class FutureRunnable implements Runnable {
+    private Future<?> task;
+
+    public Future<?> getTask() {
+        return task;
+    }
+
+    public void setTask(Future<?> task) {
+        this.task = task;
+    }
+}
 
 
-public class StartObjectClient extends Application {
+public class StartObjectClient {
     private static int defaultPort = 55555;
     private static String defaultServer = "localhost";
     public static void main(String[] args) {
-        launch(args);
+        start();
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    public static void start() {
         Properties clientProps = new Properties();
         try {
             clientProps.load(StartObjectClient.class.getResourceAsStream("/client.properties"));
@@ -38,9 +44,9 @@ public class StartObjectClient extends Application {
         String serverIP = clientProps.getProperty("server.host", defaultServer);
         int serverPort = defaultPort;
 
-        try{
+        try {
             serverPort = Integer.parseInt(clientProps.getProperty("server.port"));
-        }catch(NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             System.err.println("Wrong port number " + ex.getMessage());
             System.out.println("Using default port: " + defaultPort);
         }
@@ -49,40 +55,43 @@ public class StartObjectClient extends Application {
         System.out.println("Using server port " + serverPort);
         IServices server = new ServicesObjectProxy(serverIP, serverPort);
 
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
-        var currentDate = formatter.format(date);
         Integer nbOfShows = 3;
         Integer totalSeats = 100;
 
-
-        ScheduledExecutorService executor =
-                Executors.newSingleThreadScheduledExecutor();
-
-        Runnable periodicTask = () -> {
-            // Invoke method(s) to do the work
-            makeASell(nbOfShows, totalSeats, date, server, executor);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        FutureRunnable periodicTask = new FutureRunnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                    try {
+                        makeASell(nbOfShows, totalSeats, date, server);
+                    } catch (VanzareException e) {
+                        System.out.println(e.getMessage());
+                    } catch (ServiceException e) {
+                        executor.shutdownNow();
+                        break;
+                    }
+                }
+            }
         };
-        executor.scheduleAtFixedRate(periodicTask, 0, 5, TimeUnit.SECONDS);
+        executor.execute(periodicTask);
     }
 
-    public void makeASell(Integer nbOfShows, Integer totalSeats, Date date, IServices server, ScheduledExecutorService executor) {
+    public static void makeASell(Integer nbOfShows, Integer totalSeats, Date date, IServices server) throws ServiceException, VanzareException {
         RandomData randomData = new RandomData();
 
         Integer showId = randomData.getShowId(nbOfShows);
         List<Integer> seats = randomData.getSeats(totalSeats);
 
-        try {
-            System.out.println("Inside try");
-            server.addVanzare(showId, new java.sql.Date(date.getTime()), seats);
-
-        } catch (ServiceException e) {
-            e.printStackTrace();
-            executor.shutdown();
-        }
-
-       System.out.println("After 2 seconds");
+        System.out.println("\nNOTIFICATION:");
+        server.addVanzare(showId, new java.sql.Date(date.getTime()), seats);
+        System.out.println("Vanzare reusita!");
 
     }
 }

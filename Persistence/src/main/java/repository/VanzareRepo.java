@@ -122,63 +122,6 @@ public class VanzareRepo implements VanzareRepoInterface {
     }
 
     @Override
-    public Iterable<Vanzare> getAll() {
-        logger.traceEntry();
-        Connection con=dbUtils.getConnection();
-        List<Vanzare> vanzares =new ArrayList<>();
-        try(PreparedStatement preStmt=con.prepareStatement("select * from Vanzare")){
-            try(ResultSet result=preStmt.executeQuery()){
-                while(result.next()){
-                    Vanzare vanzare =getEntityFromResultSet(result);
-                    vanzares.add(vanzare);
-                }
-
-            }
-        }catch (SQLException ex){
-            logger.error(ex);
-            System.err.println("Error DB"+ex);
-        }
-        logger.traceExit(vanzares);
-        return vanzares;
-    }
-
-    @Override
-    public Vanzare delete(Long id) {
-        logger.traceEntry();
-        Connection con=dbUtils.getConnection();
-        List<Vanzare> vanzares =new ArrayList<>();
-        try(PreparedStatement preStmt=con.prepareStatement("delete from Vanzare where id=?")){
-            preStmt.setLong(1,id);
-            preStmt.executeUpdate();
-        }catch (SQLException ex){
-            logger.error(ex);
-            System.err.println("Error DB"+ex);
-        }
-        logger.traceExit(vanzares);
-        return null;
-    }
-
-    @Override
-    public Long getSoldSeats(Long festival_id) {
-        logger.traceEntry();
-        Connection con=dbUtils.getConnection();
-        long sold= 0L;
-        try(PreparedStatement preStmt=con.prepareStatement("select sum(seats) as Sold from Vanzare where festival_id=?;")){
-            preStmt.setLong(1,festival_id);
-            try(ResultSet result=preStmt.executeQuery()){
-                while(result.next()){
-                    sold= result.getLong("Sold");
-                }
-            }
-        }catch (SQLException ex){
-            logger.error(ex);
-            System.err.println("Error DB"+ex);
-        }
-        logger.traceExit(sold);
-        return sold;
-    }
-
-    @Override
     public Iterable<Vanzare> getBySpectacolId(Long id) {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();

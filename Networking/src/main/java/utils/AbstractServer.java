@@ -3,6 +3,7 @@ package utils;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.*;
@@ -11,14 +12,14 @@ import java.util.concurrent.*;
 public abstract class AbstractServer {
     private final int port;
     private ServerSocket server=null;
-    private final int TIME_TO_RUN = 10;
+    private final int TIME_TO_RUN = 20;
     public AbstractServer( int port){
               this.port=port;
     }
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public void start() {
 
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         Future<?> future = executor.submit(() -> {
             try{
                 server=new ServerSocket(port);
@@ -28,30 +29,27 @@ public abstract class AbstractServer {
                     System.out.println("Client connected ...");
                     processRequest(client);
                 }
-            } catch (IOException e) {
+            } catch (SocketException err){
+                System.out.println("Error with accepting the clients or shutting down");
+            }
+            catch (IOException e) {
                 e.printStackTrace();
-            }finally {
-                stop();
             }
         });
         try {
             future.get(TIME_TO_RUN, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            notifyConnectedClients();
+            e.printStackTrace();
             stop();
-            System.out.println(future.cancel(true));
         }
         System.out.println("Gracefully shutting down the server...");
-        executor.shutdown();
         System.out.println("Shut down");
-
     }
 
     protected abstract void processRequest(Socket client);
 
-    protected abstract void notifyConnectedClients();
-
     public void stop() {
+        this.executor.shutdownNow();
         try {
             server.close();
         } catch (IOException e) {

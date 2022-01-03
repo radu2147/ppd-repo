@@ -1,43 +1,27 @@
 objectProtocol/VanzareRequest.java
  objectProtocol.VanzareRequest
-objectProtocol/LogoutRequest.java
- objectProtocol.LogoutRequest
 utils/ServerException.java
  utils.ServerException
-objectProtocol/VanzareResponse.java
- objectProtocol.VanzareResponse
-objectProtocol/VanzareSoldResponse.java
- objectProtocol.VanzareSoldResponse
-utils/AbsConcurrentServer.java
- utils.AbsConcurrentServer
+objectProtocol/OkResponse.java
+ objectProtocol.OkResponse
 objectProtocol/ShutdownResponse.java
  objectProtocol.ShutdownResponse
-objectProtocol/FestivalRequest.java
- objectProtocol.FestivalRequest
 objectProtocol/Worker.java
  objectProtocol.Worker
 objectProtocol/Request.java
  objectProtocol.Request
 objectProtocol/Response.java
  objectProtocol.Response
-utils/AbstractServer.java
- utils.AbstractServer
+objectProtocol/ClientObjectWorker.java
+ objectProtocol.ClientObjectWorker
 objectProtocol/ErrorResponse.java
  objectProtocol.ErrorResponse
-objectProtocol/OkResponse.java
- objectProtocol.OkResponse
+utils/AbstractServer.java
+ utils.AbstractServer
+utils/AbsConcurrentServer.java
+ utils.AbsConcurrentServer
+utils/ObjectConcurrentServer.java
+ utils.ObjectConcurrentServer
 objectProtocol/ServicesObjectProxy.java
  objectProtocol.ServicesObjectProxy
  objectProtocol.ServicesObjectProxy$ReaderThread
-utils/ObjectConcurrentServer.java
- utils.ObjectConcurrentServer
-objectProtocol/FestivalResponse.java
- objectProtocol.FestivalResponse
-objectProtocol/LoginRequest.java
- objectProtocol.LoginRequest
-objectProtocol/VanzareSoldRequest.java
- objectProtocol.VanzareSoldRequest
-objectProtocol/ClientObjectWorker.java
- objectProtocol.ClientObjectWorker
-objectProtocol/UpdateResponse.java
- objectProtocol.UpdateResponse

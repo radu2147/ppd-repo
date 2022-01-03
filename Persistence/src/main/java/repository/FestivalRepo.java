@@ -1,6 +1,5 @@
 package repository;
 
-import domain.Sala;
 import domain.Spectacol;
 import jdbcUtils.JdbcUtils;
 import org.apache.logging.log4j.LogManager;
@@ -51,22 +50,6 @@ public class FestivalRepo implements FestivalRepoInterface {
     }
 
     @Override
-    public Spectacol add(Spectacol entity) {
-        logger.traceEntry("saving task {}",entity);
-        Connection con=dbUtils.getConnection();
-        try(PreparedStatement preStmt=con.prepareStatement("insert into spectacole (date,name,sold,price) values(?,?,?,?)")){
-            setPreparedStatement(entity,preStmt);
-            int result=preStmt.executeUpdate();
-            logger.trace("Saved {} instances",result);
-        }catch (SQLException ex){
-            logger.error(ex);
-            System.err.println("Error DB"+ex);
-        }
-        logger.traceExit();
-        return null;
-    }
-
-    @Override
     public Spectacol update(Spectacol entity) {
         logger.traceEntry("update task {}",entity);
         Connection con=dbUtils.getConnection();
@@ -82,6 +65,7 @@ public class FestivalRepo implements FestivalRepoInterface {
         logger.traceExit();
         return null;
     }
+
     private Spectacol getEntityFromResultSet(ResultSet result) throws SQLException {
         Long i=result.getLong("id");
         Date date=result.getDate("date");
@@ -112,40 +96,4 @@ public class FestivalRepo implements FestivalRepoInterface {
         return spectacol;
     }
 
-    @Override
-    public Iterable<Spectacol> getAll() {
-        logger.traceEntry();
-        Connection con=dbUtils.getConnection();
-        List<Spectacol> spectacols =new ArrayList<>();
-        try(PreparedStatement preStmt=con.prepareStatement("select * from festival")){
-            try(ResultSet result=preStmt.executeQuery()){
-                while(result.next()){
-                    Spectacol spectacol =getEntityFromResultSet(result);
-                    spectacols.add(spectacol);
-                }
-
-            }
-        }catch (SQLException ex){
-            logger.error(ex);
-            System.err.println("Error DB"+ex);
-        }
-        logger.traceExit(spectacols);
-        return spectacols;
-    }
-
-    @Override
-    public Spectacol delete(Long id) {
-        logger.traceEntry();
-        Connection con=dbUtils.getConnection();
-        List<Spectacol> spectacols =new ArrayList<>();
-        try(PreparedStatement preStmt=con.prepareStatement("delete from festival where id=?")){
-            preStmt.setLong(1,id);
-            preStmt.executeUpdate();
-        }catch (SQLException ex){
-            logger.error(ex);
-            System.err.println("Error DB"+ex);
-        }
-        logger.traceExit(spectacols);
-        return null;
-    }
 }
