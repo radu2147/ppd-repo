@@ -117,7 +117,7 @@ public class FestivalRepo implements FestivalRepoInterface {
         logger.traceEntry();
         Connection con=dbUtils.getConnection();
         List<Spectacol> spectacols =new ArrayList<>();
-        try(PreparedStatement preStmt=con.prepareStatement("select * from festival")){
+        try(PreparedStatement preStmt=con.prepareStatement("select * from spectacole")){
             try(ResultSet result=preStmt.executeQuery()){
                 while(result.next()){
                     Spectacol spectacol =getEntityFromResultSet(result);

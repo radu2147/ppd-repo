@@ -40,6 +40,10 @@ public class ServicesImpl implements IServices {
         }
     }
 
+    public void verificari() {
+        mainPageService.verificari();
+    }
+
     public synchronized void check(){
 //        checkExecutor.schedule(null, SECONDS, TimeUnit.SECONDS);
 //        try {

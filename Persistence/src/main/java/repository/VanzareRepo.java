@@ -142,6 +142,30 @@ public class VanzareRepo implements VanzareRepoInterface {
         return vanzares;
     }
 
+    public Iterable<Spectacol> getFestivalsSold() {
+        logger.traceEntry();
+        Connection con = dbUtils.getConnection();
+        List<Spectacol> spectacols = new ArrayList<>();
+
+        try(PreparedStatement preStmt = con.prepareStatement("select id_spectacol as id, sum(suma) as sold from vanzari group by id_spectacol")){
+            try(ResultSet result = preStmt.executeQuery()){
+                while(result.next()){
+                    Long i = result.getLong("id");
+                    Long sold = result.getLong("sold");
+
+                    Spectacol spectacol = new Spectacol(i, null, null, sold, null, null);
+                    spectacols.add(spectacol);
+                }
+
+            }
+        }catch (SQLException ex){
+            logger.error(ex);
+            System.err.println("Error DB" + ex);
+        }
+        logger.traceExit(spectacols);
+        return spectacols;
+    }
+
     @Override
     public Vanzare delete(Long id) {
         logger.traceEntry();

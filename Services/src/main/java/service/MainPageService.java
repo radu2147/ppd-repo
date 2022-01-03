@@ -26,6 +26,10 @@ public class MainPageService {
         return VanzareService.addVanzare(festivalID, seats, s);
     }
 
+    public void verificari() {
+        VanzareService.periodicCheck();
+    }
+
     public boolean check(){
         return VanzareService.check();
     }

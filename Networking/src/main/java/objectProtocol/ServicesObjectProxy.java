@@ -47,6 +47,11 @@ public class ServicesObjectProxy implements IServices, IObserver {
         System.out.println("Vanzare sold - proxy");
     }
 
+    @Override
+    public void verificari() {
+
+    }
+
     private void closeConnection() {
         finished=true;
         try {

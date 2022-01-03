@@ -107,4 +107,27 @@ public class VanzareLocuriRepo implements VanzareLocuriRepoInterface{
         logger.traceExit();
         return null;
     }
+
+    public Integer getLocuriVandute() {
+        logger.traceEntry();
+        Connection con = dbUtils.getConnection();
+
+        Integer locuri = 0;
+
+        try(PreparedStatement preStmt = con.prepareStatement("select COUNT(*) as total from vanzari_locuri")){
+            try(ResultSet result = preStmt.executeQuery()){
+                while(result.next()){
+                    locuri = result.getInt("total");
+                }
+
+            }
+        }catch (SQLException ex){
+            logger.error(ex);
+            System.err.println("Error DB" + ex);
+        }
+
+        logger.traceExit(locuri);
+        return locuri;
+    }
+
 }

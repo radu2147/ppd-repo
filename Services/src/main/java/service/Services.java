@@ -14,4 +14,9 @@ public class Services implements IServices {
     public void addVanzare(Integer festivalID, Date date, List<Integer> seats) {
 
     }
+
+    @Override
+    public void verificari() {
+
+    }
 }

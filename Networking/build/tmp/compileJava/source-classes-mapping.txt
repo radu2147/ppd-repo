@@ -20,15 +20,15 @@ objectProtocol/Request.java
  objectProtocol.Request
 objectProtocol/Response.java
  objectProtocol.Response
-objectProtocol/UpdateResponse.java
- objectProtocol.UpdateResponse
+objectProtocol/ServicesObjectProxy.java
+ objectProtocol.ServicesObjectProxy
+ objectProtocol.ServicesObjectProxy$ReaderThread
 objectProtocol/ErrorResponse.java
  objectProtocol.ErrorResponse
 objectProtocol/OkResponse.java
  objectProtocol.OkResponse
-objectProtocol/ServicesObjectProxy.java
- objectProtocol.ServicesObjectProxy
- objectProtocol.ServicesObjectProxy$ReaderThread
+objectProtocol/UpdateResponse.java
+ objectProtocol.UpdateResponse
 objectProtocol/ClientObjectWorker.java
  objectProtocol.ClientObjectWorker
 objectProtocol/FestivalResponse.java
@@ -37,6 +37,7 @@ objectProtocol/LoginRequest.java
  objectProtocol.LoginRequest
 utils/AbstractServer.java
  utils.AbstractServer
+ utils.AbstractServer$1
 utils/ObjectConcurrentServer.java
  utils.ObjectConcurrentServer
 utils/AbsConcurrentServer.java
